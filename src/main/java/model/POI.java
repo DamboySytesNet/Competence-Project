@@ -5,6 +5,7 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 @Builder
 public class POI {
 
