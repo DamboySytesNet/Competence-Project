@@ -12,9 +12,9 @@ public class UserFactoryTest {
         User user;
 
 
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 100; i++) {
             user = UserFactory.getInstance().generate();
-            System.out.println(user);
+            Assert.assertTrue(!user.getPhoneNumber().startsWith("0"));
         }
     }
 }

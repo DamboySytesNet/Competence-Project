@@ -2,7 +2,8 @@ package model;
 
 public enum UserGender {
     male,
-    female;
+    female,
+    helikopter_szturmowy;
 
 
     public static UserGender getGender(int x) {

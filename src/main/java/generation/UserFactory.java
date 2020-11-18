@@ -15,13 +15,14 @@ public class UserFactory {
     private NormalDistribution ageNormalDistribution;
     private UniformIntegerDistribution typeUniformDistribution;
     private UniformIntegerDistribution genderUniformDistribution;
-
+    private Random random ;
     private static UserFactory instance = new UserFactory();
 
     private UserFactory() {
         ageNormalDistribution = new NormalDistribution(35, 16);
         typeUniformDistribution = new UniformIntegerDistribution(0,2);
-        genderUniformDistribution = new UniformIntegerDistribution(0,1);
+        genderUniformDistribution = new UniformIntegerDistribution(0,2);
+        random = new Random();
     }
 
     public static UserFactory getInstance() {
@@ -29,21 +30,19 @@ public class UserFactory {
     }
 
     public User generate(){
-        Random random = new Random();
-        UUID userID = UUID.randomUUID();
-        StringBuilder phoneNumber = new StringBuilder();
-        for(int i = 0 ; i < 9 ; i++){
-            phoneNumber.append((char) (random.nextInt(9) + 48));
-        }
         int userAge;
+        UUID userID = UUID.randomUUID();
+        String phoneNumber = "";
+        phoneNumber = Integer.toString(random.nextInt(899999999) + 100000000) ;
         do{
             userAge = (int) ageNormalDistribution.sample();
         }while(userAge < 19 || userAge > 80);
+
         UserType userType = UserType.getUserType(typeUniformDistribution.sample());
         UserGender userGender = UserGender.getGender(genderUniformDistribution.sample());
         return User.builder()
                 .userID(userID)
-                .phoneNumber(phoneNumber.toString())
+                .phoneNumber(phoneNumber)
                 .userAge(userAge)
                 .userType(userType)
                 .userGender(userGender)
