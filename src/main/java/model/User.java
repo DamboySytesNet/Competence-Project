@@ -10,6 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Builder
+@EqualsAndHashCode
 public class User {
 
     private UUID userID;
