@@ -3,5 +3,9 @@ package model;
 public enum POIType {
     indoor,
     outdoor,
-    other
+    other;
+
+    public static POIType getPOIType(int x) {
+        return values()[x];
+    }
 }

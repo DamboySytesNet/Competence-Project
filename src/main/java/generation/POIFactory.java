@@ -2,18 +2,22 @@ package generation;
 
 import model.Geolocalization;
 import model.POI;
+import model.POIType;
 import org.apache.commons.math3.distribution.ExponentialDistribution;
+import org.apache.commons.math3.distribution.UniformIntegerDistribution;
 import org.apache.commons.math3.distribution.UniformRealDistribution;
 
 public class POIFactory {
-    private ExponentialDistribution exponentialDistribution;
-    private UniformRealDistribution uniformRealDistribution;
+    private final ExponentialDistribution distanceExponentialDistribution;
+    private final UniformRealDistribution angleUniformRealDistribution;
+    private final UniformIntegerDistribution typeUniformDistribution;
 
-    private static POIFactory instance = new POIFactory();
+    private static final POIFactory instance = new POIFactory();
 
     private POIFactory() {
-        exponentialDistribution = new ExponentialDistribution(0.5);
-        uniformRealDistribution = new UniformRealDistribution();
+        distanceExponentialDistribution = new ExponentialDistribution(0.5);
+        angleUniformRealDistribution = new UniformRealDistribution();
+        typeUniformDistribution = new UniformIntegerDistribution(0,2);
     }
 
     public static POIFactory getInstance() {
@@ -24,26 +28,31 @@ public class POIFactory {
 
         Geolocalization geolocalization;
         do {
-            double angle = uniformRealDistribution.sample() * 2 * Math.PI;
-            double distance = exponentialDistribution.sample();
+            double angle = angleUniformRealDistribution.sample() * 2 * Math.PI;
+            double distance = distanceExponentialDistribution.sample();
 
             geolocalization = new Geolocalization(
-                    GeneratorConsts.LATITUDE_C + distance * Math.cos(angle),
-                    GeneratorConsts.LONGITUDE_C + distance * Math.sin(angle)
+                    GeneratorConsts.LATITUDE_CENTER + distance * Math.cos(angle),
+                    GeneratorConsts.LONGITUDE_CENTER + distance * Math.sin(angle)
             );
         } while (!isGeolocalizationInBoundaries(geolocalization));
 
         return POI.builder()
+                .name("")
+                .description("")
                 .geolocalization(geolocalization)
+                .type(POIType.getPOIType(typeUniformDistribution.sample()))
                 .build();
     }
 
     private boolean isGeolocalizationInBoundaries(Geolocalization geolocalization) {
-        if(GeneratorConsts.LATITUDE_C - GeneratorConsts.LATITUDE_B > geolocalization.getLatitude()
-                || geolocalization.getLatitude() > GeneratorConsts.LATITUDE_C + GeneratorConsts.LATITUDE_B)
+        if(GeneratorConsts.LATITUDE_CENTER - GeneratorConsts.LATITUDE_BOUNDARY
+                > geolocalization.getLatitude() || geolocalization.getLatitude()
+                > GeneratorConsts.LATITUDE_CENTER + GeneratorConsts.LATITUDE_BOUNDARY)
             return false;
-        else if(GeneratorConsts.LONGITUDE_C - GeneratorConsts.LONGITUDE_B > geolocalization.getLongitude()
-                || geolocalization.getLongitude() > GeneratorConsts.LONGITUDE_C + GeneratorConsts.LONGITUDE_B)
+        else if(GeneratorConsts.LONGITUDE_CENTER - GeneratorConsts.LONGITUDE_BOUNDARY
+                > geolocalization.getLongitude() || geolocalization.getLongitude()
+                > GeneratorConsts.LONGITUDE_CENTER + GeneratorConsts.LONGITUDE_BOUNDARY)
             return false;
 
         return true;
