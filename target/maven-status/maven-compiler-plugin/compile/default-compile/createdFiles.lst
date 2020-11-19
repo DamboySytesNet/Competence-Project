@@ -1,6 +1,0 @@
-model\POIType.class
-generation\GeneratorConsts.class
-generation\POIFactory.class
-model\POI$POIBuilder.class
-model\Geolocalization.class
-model\POI.class

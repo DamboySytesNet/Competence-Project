@@ -26,20 +26,26 @@ public class JavaDatabaseConnectorTest {
         Assert.assertNotEquals(null, resultSet);
     }
 
+
+    /**
+     * Przed wykonaniem poniższych testow w bazie danych muszą byc dodadne odpowiednie krotki -
+     * znajduja sie one w insert_init_values__V1.sql
+     **/
+
     @Test
     public void checkUserCrud() throws SQLException {
         //given:
         String query = "SELECT * FROM `competence-schema`.`persons`";
-
         UserRepository userRepository = new UserRepository();
+        User stUser = new User(UUID.randomUUID(), "111222333",
+                21, UserType.student, UserGender.female);
 
         //when:
-        boolean st_added = userRepository.save(new User(UUID.fromString("e734b220-dffb-4e86-9ed3-e384afef233f"), "111222333",
-                21, UserType.student, UserGender.female));
+        boolean stAdded = userRepository.save(stUser);
 
-        User st_user = userRepository.getById(UUID.fromString("e734b220-dffb-4e86-9ed3-e384afef233f"));
+        User getUser = userRepository.getById(stUser.getUserID());
 
-        boolean nd_added = userRepository.save(new User(UUID.fromString("e734b220-dffb-4e86-9ed3-e384afef233a"), "111222456",
+        boolean ndAdded = userRepository.save(new User(UUID.fromString("e734b220-dffb-4e86-9ed3-e384afef233a"), "111222456",
                 48, UserType.teacher, UserGender.helikopter_szturmowy));
 
         boolean updated = userRepository.updateById(new User(UUID.fromString("e734b220-dffb-4e86-9ed3-e384afef233a"), "222222333",
@@ -47,35 +53,32 @@ public class JavaDatabaseConnectorTest {
 
         List<User> users = userRepository.getAll();
 
-        boolean deleted = userRepository.delete(UUID.fromString("e734b220-dffb-4e86-9ed3-e384afef233f"));
+        boolean deleted = userRepository.delete(stUser.getUserID());
         boolean deleted2 = userRepository.delete(UUID.fromString("e734b220-dffb-4e86-9ed3-e384afef233a"));
 
         //then:
-        Assert.assertTrue(st_added);
-        Assert.assertTrue(nd_added);
+        Assert.assertTrue(stAdded);
+        Assert.assertTrue(ndAdded);
         Assert.assertTrue(updated);
         Assert.assertTrue(deleted);
         Assert.assertTrue(deleted2);
         Assert.assertEquals(2, users.size());
-        Assert.assertEquals(st_user, new User(UUID.fromString("e734b220-dffb-4e86-9ed3-e384afef233f"), "111222333",
-                21, UserType.student, UserGender.female));
+        Assert.assertEquals(getUser, stUser);
     }
 
-    /**
-     * Przed wykonaniem testow w bazie danych muszą byc odpowiednie krotki w tabelach powiazanych z POIType i Experiment
-     **/
     @Test
     public void checkPOICrud() throws SQLException {
         //given:
         POIRepository poiRepository = new POIRepository();
+        POI stPOI = new POI("testName", "testDescription",
+                new Geolocalization(22.11, 33.43), POIType.outdoor, "1");
 
         //when:
-        boolean st_added = poiRepository.save(new POI("testName", "testDescription",
-                new Geolocalization(22.11, 33.43), POIType.outdoor, "1"));
+        boolean stAdded = poiRepository.save(stPOI);
 
-        POI st_poi = poiRepository.getByName("testName");
+        POI getPOI = poiRepository.getByName("testName");
 
-        boolean nd_added = poiRepository.save(new POI("testName2", "testDescriptionABC",
+        boolean ndAdded = poiRepository.save(new POI("testName2", "testDescriptionABC",
                 new Geolocalization(12.12, 66.13), POIType.outdoor, "1"));
 
         boolean updated = poiRepository.updateByName(new POI("testName2", "testDescriptionABC",
@@ -87,13 +90,12 @@ public class JavaDatabaseConnectorTest {
         boolean deleted2 = poiRepository.delete("testName2");
 
         //then:
-        Assert.assertTrue(st_added);
-        Assert.assertTrue(nd_added);
+        Assert.assertTrue(stAdded);
+        Assert.assertTrue(ndAdded);
         Assert.assertTrue(updated);
         Assert.assertTrue(deleted);
         Assert.assertTrue(deleted2);
         Assert.assertEquals(2, pois.size());
-        Assert.assertEquals(st_poi, new POI("testName", "testDescription",
-                new Geolocalization(22.11, 33.43), POIType.outdoor, "1"));
+        Assert.assertEquals(getPOI, stPOI);
     }
 }
