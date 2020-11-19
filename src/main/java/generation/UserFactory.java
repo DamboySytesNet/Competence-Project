@@ -1,6 +1,6 @@
 package generation;
 
-import model.Geolocalization;
+
 import model.User;
 import model.UserGender;
 import model.UserType;
