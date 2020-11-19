@@ -16,4 +16,8 @@ public class Geolocalization {
     // y coordinate
     private double longitude;
 
+    public double getDistance(Geolocalization other) {
+        return Math.sqrt(this.latitude * other.getLatitude() + this.longitude * other.getLongitude());
+    }
+
 }
