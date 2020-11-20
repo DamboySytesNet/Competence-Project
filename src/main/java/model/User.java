@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import lombok.*;
 
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -17,6 +16,6 @@ public class User {
     private int userAge;
     private UserType userType;
     private UserGender userGender;
-    private String experimentId;
 
+    private String experimentId;
 }
