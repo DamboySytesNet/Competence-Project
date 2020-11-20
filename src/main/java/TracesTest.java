@@ -24,7 +24,7 @@ public class TracesTest {
 
         LocalDateTime startTime = LocalDateTime.now();
 
-        for (int i=0; i < 1000; i++) {
+        for (int i=0; i < 100; i++) {
             pointsOfInterest.add(poiFactory.generate());
         }
 
@@ -41,8 +41,9 @@ public class TracesTest {
             List<Trace> traces = traceGenerator.generateTrace(currentTime);
             System.out.println(currentTime);
             System.out.println(traces.size());
-            Thread.sleep(GeneratorConsts.TIME_SPEED * 1000);
-            currentTime = currentTime.plusMinutes(GeneratorConsts.TIME_SPEED);
+            // System.out.println(traces);
+            Thread.sleep(1000);
+            currentTime = currentTime.plusMinutes(GeneratorConsts.TIME_STEP);
         }
 
     }
