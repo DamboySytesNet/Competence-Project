@@ -2,12 +2,10 @@ package model;
 
 import lombok.*;
 
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
 @Builder
-@EqualsAndHashCode
+@Data
 public class POI {
 
     private String name;
@@ -15,4 +13,5 @@ public class POI {
     private Geolocalization geolocalization;
     private POIType type;
     private String experimentId;
+
 }

@@ -20,7 +20,9 @@ public class UserRepository {
         resultSet.next();
         User user = new User(UUID.fromString(resultSet.getString("id")),
                 resultSet.getString("phone_number"), 21,
-                UserType.valueOf(resultSet.getString("profile_name")), UserGender.female);
+                UserType.valueOf(resultSet.getString("profile_name")),
+                UserGender.valueOf(resultSet.getString("user_gender")),
+                resultSet.getString("experiment_id"));
 
         connection.close();
         return user;
@@ -33,7 +35,9 @@ public class UserRepository {
         while (resultSet.next()) {
             users.add(new User( UUID.fromString(resultSet.getString("id")),
                     resultSet.getString("phone_number"), 21,
-                    UserType.valueOf(resultSet.getString("profile_name")), UserGender.female));
+                    UserType.valueOf(resultSet.getString("profile_name")),
+                    UserGender.valueOf(resultSet.getString("user_gender")),
+                    resultSet.getString("experiment_id")));
         }
         connection.close();
         return users;
@@ -42,12 +46,12 @@ public class UserRepository {
     public boolean save(User user) throws SQLException {
         Connection connection = getConnection();
         PreparedStatement statement = connection.prepareStatement(
-                "INSERT INTO `competence-schema`.`persons` (id, phone_number, profile_name, experiment_id) VALUES (?, ?, ?, ?)");
+                "INSERT INTO `competence-schema`.`persons` (id, phone_number, profile_name, experiment_id, user_gender) VALUES (?, ?, ?, ?, ?)");
         statement.setString(1, user.getUserID().toString());
         statement.setString(2, user.getPhoneNumber());
         statement.setString(3, user.getUserType().toString());
-        statement.setLong(4, 1);
-
+        statement.setString(4, user.getExperimentId());
+        statement.setString(5, user.getUserGender().name());
         boolean isFinished =  statement.executeUpdate() > 0;
         connection.close();
         return isFinished;
@@ -56,11 +60,12 @@ public class UserRepository {
     public boolean updateById(User user) throws SQLException {
         Connection connection = getConnection();
         PreparedStatement statement = connection.prepareStatement(
-                "UPDATE `competence-schema`.`persons` SET phone_number=?, profile_name=?, experiment_id=? WHERE id=?");
+                "UPDATE `competence-schema`.`persons` SET phone_number=?, profile_name=?, experiment_id=?, user_gender=? WHERE id=?");
         statement.setString(1, user.getPhoneNumber());
         statement.setString(2, user.getUserType().toString());
-        statement.setLong(3, 1);
-        statement.setString(4, user.getUserID().toString());
+        statement.setString(3, user.getExperimentId());
+        statement.setString(4, user.getUserGender().toString());
+        statement.setString(5, user.getUserID().toString());
 
         boolean isFinished =  statement.executeUpdate() > 0;
         connection.close();

@@ -29,7 +29,7 @@ public class JavaDatabaseConnectorTest {
 
     /**
      * Przed wykonaniem poniższych testow w bazie danych muszą byc dodadne odpowiednie krotki -
-     * znajduja sie one w insert_init_values__V1.sql
+     * znajduja sie one w V2__insert_init_values.sql
      **/
 
     @Test
@@ -38,18 +38,19 @@ public class JavaDatabaseConnectorTest {
         String query = "SELECT * FROM `competence-schema`.`persons`";
         UserRepository userRepository = new UserRepository();
         User stUser = new User(UUID.randomUUID(), "111222333",
-                21, UserType.student, UserGender.female);
+                21, UserType.student, UserGender.female, "1");
+        User ndUser = new User(UUID.fromString("e734b220-dffb-4e86-9ed3-e384afef233a"), "111222456",
+                48, UserType.teacher, UserGender.helikopter_szturmowy, "1");
 
         //when:
         boolean stAdded = userRepository.save(stUser);
 
         User getUser = userRepository.getById(stUser.getUserID());
 
-        boolean ndAdded = userRepository.save(new User(UUID.fromString("e734b220-dffb-4e86-9ed3-e384afef233a"), "111222456",
-                48, UserType.teacher, UserGender.helikopter_szturmowy));
-
-        boolean updated = userRepository.updateById(new User(UUID.fromString("e734b220-dffb-4e86-9ed3-e384afef233a"), "222222333",
-                18, UserType.teacher, UserGender.helikopter_szturmowy));
+        boolean ndAdded = userRepository.save(ndUser);
+        ndUser.setUserAge(49);
+        ndUser.setUserGender(UserGender.female);
+        boolean updated = userRepository.updateById(ndUser);
 
         List<User> users = userRepository.getAll();
 
@@ -72,17 +73,19 @@ public class JavaDatabaseConnectorTest {
         POIRepository poiRepository = new POIRepository();
         POI stPOI = new POI("testName", "testDescription",
                 new Geolocalization(22.11, 33.43), POIType.outdoor, "1");
+        POI ndPOI = new POI("testName2", "testDescriptionABC",
+                new Geolocalization(12.12, 66.13), POIType.outdoor, "1");
 
         //when:
         boolean stAdded = poiRepository.save(stPOI);
 
         POI getPOI = poiRepository.getByName("testName");
 
-        boolean ndAdded = poiRepository.save(new POI("testName2", "testDescriptionABC",
-                new Geolocalization(12.12, 66.13), POIType.outdoor, "1"));
+        boolean ndAdded = poiRepository.save(ndPOI);
+        ndPOI.getGeolocalization().setLatitude(22.69);
+        ndPOI.setType(POIType.other);
 
-        boolean updated = poiRepository.updateByName(new POI("testName2", "testDescriptionABC",
-                new Geolocalization(22.6969, 33.43), POIType.other, "1"));
+        boolean updated = poiRepository.updateByName(ndPOI);
 
         List<POI> pois = poiRepository.getAll();
 
