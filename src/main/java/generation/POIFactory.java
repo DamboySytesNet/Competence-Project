@@ -7,6 +7,8 @@ import org.apache.commons.math3.distribution.ExponentialDistribution;
 import org.apache.commons.math3.distribution.UniformIntegerDistribution;
 import org.apache.commons.math3.distribution.UniformRealDistribution;
 
+import java.util.UUID;
+
 public class POIFactory {
     private final ExponentialDistribution distanceExponentialDistribution;
     private final UniformRealDistribution angleUniformRealDistribution;
@@ -38,6 +40,7 @@ public class POIFactory {
         } while (!isGeolocalizationInBoundaries(geolocalization));
 
         return POI.builder()
+                .id(UUID.randomUUID())
                 .name("")
                 .description("")
                 .geolocalization(geolocalization)
