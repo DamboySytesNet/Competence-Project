@@ -4,7 +4,10 @@ import model.Geolocalization;
 import model.POI;
 import model.POIType;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -20,13 +23,12 @@ public class POIRepository {
         statement.setString(1, name);
         ResultSet resultSet = statement.executeQuery();
         resultSet.next();
-        POI poi = new POI(resultSet.getString("name"),
-                resultSet.getString("description"),
-                new Geolocalization(resultSet.getDouble("x"),
-                        resultSet.getDouble("y")),
-                POIType.valueOf(resultSet.getString("type")),
-                resultSet.getString("experiment_id")
-                );
+        POI poi = POI.builder().description(resultSet.getString("description"))
+                .experimentId(resultSet.getString("experiment_id"))
+                .geolocalization(new Geolocalization(resultSet.getDouble("x"),
+                        resultSet.getDouble("y")))
+                .name(resultSet.getString("name"))
+                .type(POIType.valueOf(resultSet.getString("type"))).build();
 
         connection.close();
         return poi;
@@ -37,13 +39,12 @@ public class POIRepository {
         ResultSet resultSet = connection.createStatement().executeQuery("SELECT * FROM `competence-schema`.`poi`");
         List<POI> pois = new ArrayList<>();
         while (resultSet.next()) {
-            pois.add(new POI(resultSet.getString("name"),
-                    resultSet.getString("description"),
-                    new Geolocalization(resultSet.getFloat("x"),
-                            resultSet.getFloat("y")),
-                    POIType.valueOf(resultSet.getString("type")),
-                    resultSet.getString("experiment_id")
-            ));
+            pois.add(POI.builder().description(resultSet.getString("description"))
+                    .experimentId(resultSet.getString("experiment_id"))
+                    .geolocalization(new Geolocalization(resultSet.getDouble("x"),
+                            resultSet.getDouble("y")))
+                    .name(resultSet.getString("name"))
+                    .type(POIType.valueOf(resultSet.getString("type"))).build());
         }
         connection.close();
         return pois;

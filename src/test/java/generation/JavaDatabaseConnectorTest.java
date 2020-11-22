@@ -1,7 +1,12 @@
 package generation;
 
 import dbconnector.JavaDatabaseConnector;
-import model.*;
+import model.POI;
+import model.User;
+import model.UserGender;
+import model.UserType;
+import model.Geolocalization;
+import model.POIType;
 import org.junit.Assert;
 import org.junit.Test;
 import repository.POIRepository;

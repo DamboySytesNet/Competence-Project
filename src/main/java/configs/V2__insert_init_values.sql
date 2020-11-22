@@ -25,3 +25,4 @@ ALTER TABLE `competence-schema`.`persons` ADD FOREIGN KEY (user_gender) REFERENC
 insert into `competence-schema`.`user_gender` values('male');
 insert into `competence-schema`.`user_gender` values('female');
 insert into `competence-schema`.`user_gender` values('helikopter_szturmowy');
+alter table `competence-schema`.`persons` add column `user_age` INT NOT NULL;
