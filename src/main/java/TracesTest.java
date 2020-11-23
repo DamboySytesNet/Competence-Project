@@ -14,10 +14,8 @@ public class TracesTest {
 
     public static void main(String[] args) throws InterruptedException {
 
-
         POIFactory poiFactory = POIFactory.getInstance();
         UserFactory userFactory = UserFactory.getInstance();
-
 
         List<POI> pointsOfInterest = new LinkedList<>();
         List<User> users = new LinkedList<>();
@@ -37,7 +35,7 @@ public class TracesTest {
 
         System.out.println(users);
 
-        while (true) {
+        for (int i=0; i<20; ++i) {
             List<Trace> traces = traceGenerator.generateTrace(currentTime);
             System.out.println(currentTime);
             System.out.println(traces.size());
