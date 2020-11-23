@@ -9,12 +9,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @ToString
 public class Trace {
-    private User user;
-    private POI poinOfInterest;
-    private LocalDateTime entryTime;
-    private LocalDateTime exitTime;
+    private final User user;
+    private final POI pointOfInterest;
+    private final LocalDateTime entryTime;
+    private final LocalDateTime exitTime;
 
-//    public String toString() {
-//        return user.getUserID() + " " + poinOfInterest.getGeolocalization(); //  + " " + entryTime + " " + exitTime;
-//    }
 }

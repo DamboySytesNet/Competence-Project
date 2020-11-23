@@ -54,7 +54,7 @@ public class TraceGenerator {
                             location,
                             destination
                     );
-                    long waitingTime = random.nextInt(10) + 5;
+                    long waitingTime = random.nextInt(15) + 3;
                     LocalDateTime exitTime = time.plusMinutes(waitingTime);
                     userTraceInformation.setWaitingTime(waitingTime);
 
