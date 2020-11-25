@@ -20,7 +20,7 @@ CREATE TABLE `competence-schema`.`persons` (
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
   UNIQUE INDEX `phone_number_UNIQUE` (`phone_number` ASC),
-  UNIQUE INDEX `profile_name_UNIQUE` (`profile_name` ASC),
+  UNIQUE INDEX `profile_name_UNIQUE` (`profile_name` ASC),      -- do wyjebania, dodac gender
   FOREIGN KEY (`experiment_id`) REFERENCES `competence-schema`.`experiments`(`id`));
 
 CREATE TABLE `competence-schema`.`poi_types` (
