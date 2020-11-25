@@ -1,6 +1,5 @@
 package generation;
 
-
 import model.User;
 import model.UserGender;
 import model.UserType;
