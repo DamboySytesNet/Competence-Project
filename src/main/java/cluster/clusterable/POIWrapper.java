@@ -9,11 +9,11 @@ import org.apache.commons.math3.ml.clustering.Clusterable;
 @Getter
 public class POIWrapper implements Clusterable {
 
-    private POI poi;
+    private final POI poi;
 
     @Override
     public double[] getPoint() {
-        return new double [] { poi.getGeolocalization().getLongitude(),
-                poi.getGeolocalization().getLatitude() };
+        return new double [] { poi.getGeolocalization().getLatitude(),
+                poi.getGeolocalization().getLongitude() };
     }
 }
