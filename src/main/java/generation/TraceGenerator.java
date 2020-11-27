@@ -10,6 +10,7 @@ import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.distribution.WeibullDistribution;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,10 +23,13 @@ public class TraceGenerator {
     private WeibullDistribution newPoiIndexDistribution;
     private NormalDistribution waitingTimeDistribution;
 
-    public TraceGenerator(List<User> users, List<POI> pointsOfInterest) {
+    private LocalDateTime lastStepTime;
+
+    public TraceGenerator(List<User> users, List<POI> pointsOfInterest, LocalDateTime startTime) {
         this.users = new LinkedList<>();
         this.pointsOfInterest = pointsOfInterest;
         this.numberOfPois = pointsOfInterest.size();
+        this.lastStepTime = startTime;
 
         this.velocityDistribution = new NormalDistribution(1.127, 0.5324);
         this.newPoiIndexDistribution = new WeibullDistribution(1, 10);
@@ -59,7 +63,13 @@ public class TraceGenerator {
         return waitingTime;
     }
 
+    private long calcTimeStep(LocalDateTime currentTime) {
+        long minutesDifference = ChronoUnit.MINUTES.between(this.lastStepTime, currentTime);
+        return minutesDifference;
+    }
+
     public List<Trace> generateTrace(LocalDateTime time) {
+        long timeStep = this.calcTimeStep(time);
         List<Trace> traces = new LinkedList<>();
 
         for (UserTraceInformation userTraceInformation: this.users) {
@@ -87,10 +97,10 @@ public class TraceGenerator {
 
                     traces.add(newTrace);
                 } else {
-                    userTraceInformation.decreaseWaitingTime(GeneratorConsts.TIME_STEP);
+                    userTraceInformation.decreaseWaitingTime(timeStep);
                 }
             } else {
-                userTraceInformation.decreaseRemainingTravelTime(GeneratorConsts.TIME_STEP);
+                userTraceInformation.decreaseRemainingTravelTime(timeStep);
             }
         }
         return traces;
