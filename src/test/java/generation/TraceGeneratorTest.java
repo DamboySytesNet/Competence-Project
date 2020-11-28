@@ -49,8 +49,7 @@ public class TraceGeneratorTest {
             currentTime = currentTime.plusMinutes(this.timeStep);
             traces.addAll(this.traceGenerator.generateTraces(currentTime));
         } while (traces.size() < 10);
-
-        System.out.println(traces);
+        
         // check
         for (Trace trace: traces) {
             Assert.assertNotNull(trace.getUser());
