@@ -68,7 +68,7 @@ public class TraceGenerator {
         return minutesDifference;
     }
 
-    public List<Trace> generateTrace(LocalDateTime time) {
+    public List<Trace> generateTraces(LocalDateTime time) {
         long timeStep = this.calcTimeStep(time);
         List<Trace> traces = new LinkedList<>();
 

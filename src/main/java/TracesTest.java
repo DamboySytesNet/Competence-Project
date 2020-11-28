@@ -26,22 +26,22 @@ public class TracesTest {
             pointsOfInterest.add(poiFactory.generate());
         }
 
-        for (int i=0; i < 10000; i++) {
+        for (int i=0; i < 10; i++) {
             users.add(userFactory.generate());
         }
 
         LocalDateTime currentTime = startTime;
-        TraceGenerator traceGenerator = new TraceGenerator(users, pointsOfInterest);
+        TraceGenerator traceGenerator = new TraceGenerator(users, pointsOfInterest, currentTime);
 
-        System.out.println(users);
+//        System.out.println(users);
 
         for (int i=0; i<20; ++i) {
-            List<Trace> traces = traceGenerator.generateTrace(currentTime);
-            System.out.println(currentTime);
-            System.out.println(traces.size());
-            // System.out.println(traces);
-            Thread.sleep(1000);
             currentTime = currentTime.plusMinutes(GeneratorConsts.TIME_STEP);
+            List<Trace> traces = traceGenerator.generateTraces(currentTime);
+//            System.out.println(currentTime);
+//            System.out.println(traces.size());
+            System.out.println(traces);
+            Thread.sleep(1000);
         }
 
     }
