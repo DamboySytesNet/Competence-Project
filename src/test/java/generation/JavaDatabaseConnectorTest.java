@@ -1,6 +1,6 @@
 package generation;
 
-import dbconnector.JavaDatabaseConnector;
+import connectors.JavaDatabaseConnector;
 import model.POI;
 import model.User;
 import model.UserGender;

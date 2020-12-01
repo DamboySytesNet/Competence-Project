@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static dbconnector.JavaDatabaseConnector.getConnection;
+import static connectors.JavaDatabaseConnector.getConnection;
 
 public class UserRepository {
 
