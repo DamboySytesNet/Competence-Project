@@ -17,7 +17,6 @@ import java.util.List;
 public class TraceGenerator {
     private List<UserTraceInformation> users;
     private List<POI> pointsOfInterest;
-    private int numberOfPois;
 
     private NormalDistribution velocityDistribution;
     private WeibullDistribution newPoiIndexDistribution;
@@ -28,7 +27,6 @@ public class TraceGenerator {
     public TraceGenerator(List<User> users, List<POI> pointsOfInterest, LocalDateTime startTime) {
         this.users = new LinkedList<>();
         this.pointsOfInterest = pointsOfInterest;
-        this.numberOfPois = pointsOfInterest.size();
         this.lastStepTime = startTime;
 
         this.velocityDistribution = new NormalDistribution(1.127, 0.5324);
@@ -48,7 +46,7 @@ public class TraceGenerator {
 
         do {
             poiIndex = (int) Math.round(this.newPoiIndexDistribution.sample());
-        } while (poiIndex >= this.numberOfPois || poiIndex < 0);
+        } while (poiIndex >= this.pointsOfInterest.size() || poiIndex < 0);
 
         return poiIndex;
     }
@@ -83,12 +81,11 @@ public class TraceGenerator {
                     } while (destination.equals(location));
 
                     // update data
-                    userTraceInformation.updatePOIs(location, destination);
                     long waitingTime = this.randWaitingTime();
-                    LocalDateTime exitTime = time.plusMinutes(waitingTime);
-                    userTraceInformation.setWaitingTime(waitingTime);
+                    userTraceInformation.updateInfo(location, destination, waitingTime);
 
                     // generate trace from data
+                    LocalDateTime exitTime = time.plusMinutes(waitingTime);
                     Trace newTrace = new Trace(
                             userTraceInformation.getUser(),
                             userTraceInformation.getNewPOI(),
@@ -134,7 +131,13 @@ public class TraceGenerator {
             this.waitingTime -= minutes;
         }
 
-        public void updatePOIs(POI lastPOI, POI newPOI) {
+        public void updateInfo(POI lastPOI, POI newPOI, long waitingTime) {
+            this.updatePOIs(lastPOI, newPOI);
+            this.setWaitingTime(waitingTime);
+
+        }
+
+        private void updatePOIs(POI lastPOI, POI newPOI) {
             this.lastPOI = lastPOI;
             this.newPOI = newPOI;
 
