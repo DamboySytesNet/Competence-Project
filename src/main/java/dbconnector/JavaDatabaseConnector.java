@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.SQLException;
 
 public class JavaDatabaseConnector {
 
@@ -26,6 +27,18 @@ public class JavaDatabaseConnector {
         }
         assert resultSet != null;
         return resultSet;
+    }
+
+    public static Connection getConnection(){
+        Connection connection = null;
+        try {
+            Class.forName(DRIVER_NAME);
+            connection = DriverManager.getConnection(
+                    URL, USERNAME, PASSWORD);
+        } catch (ClassNotFoundException | SQLException e) {
+            System.out.println(e);
+        }
+        return connection;
     }
 
 }
