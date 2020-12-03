@@ -6,70 +6,98 @@ import lombok.ToString;
 import model.POI;
 import model.Trace;
 import model.User;
+import org.apache.commons.math3.distribution.NormalDistribution;
+import org.apache.commons.math3.distribution.WeibullDistribution;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 public class TraceGenerator {
     private List<UserTraceInformation> users;
     private List<POI> pointsOfInterest;
-    private Random random;
 
-    public TraceGenerator(List<User> users, List<POI> pointsOfInterest) {
-        this.random = new Random();
+    private NormalDistribution velocityDistribution;
+    private WeibullDistribution newPoiIndexDistribution;
+    private NormalDistribution waitingTimeDistribution;
+
+    private LocalDateTime lastStepTime;
+
+    public TraceGenerator(List<User> users, List<POI> pointsOfInterest, LocalDateTime startTime) {
         this.users = new LinkedList<>();
-
         this.pointsOfInterest = pointsOfInterest;
+        this.lastStepTime = startTime;
+
+        this.velocityDistribution = new NormalDistribution(1.127, 0.5324);
+        this.newPoiIndexDistribution = new WeibullDistribution(1, 10);
+        this.waitingTimeDistribution = new NormalDistribution(30, 20);
+
         for (User user: users) {
-            this.users.add(new UserTraceInformation(
-                        user,
-                        this.pointsOfInterest.get(random.nextInt(this.pointsOfInterest.size()))
-            ));
+            POI poi = this.pointsOfInterest.get(this.randPoiIndex());
+            UserTraceInformation userTraceInfo = new UserTraceInformation(user, poi, this.velocityDistribution.sample());
+
+            this.users.add(userTraceInfo);
         }
     }
 
-    public List<Trace> generateTrace(LocalDateTime time) {
+    private int randPoiIndex() {
+        int poiIndex;
+
+        do {
+            poiIndex = (int) Math.round(this.newPoiIndexDistribution.sample());
+        } while (poiIndex >= this.pointsOfInterest.size() || poiIndex < 0);
+
+        return poiIndex;
+    }
+
+    private int randWaitingTime() {
+        int waitingTime;
+
+        do {
+            waitingTime = (int) Math.round(this.waitingTimeDistribution.sample());
+        } while (waitingTime <= 0);
+
+        return waitingTime;
+    }
+
+    private long calcTimeStep(LocalDateTime currentTime) {
+        long minutesDifference = ChronoUnit.MINUTES.between(this.lastStepTime, currentTime);
+        return minutesDifference;
+    }
+
+    public List<Trace> generateTraces(LocalDateTime time) {
+        long timeStep = this.calcTimeStep(time);
         List<Trace> traces = new LinkedList<>();
 
         for (UserTraceInformation userTraceInformation: this.users) {
-
-            Trace newTrace;
-
             if (userTraceInformation.getRemainingTravelTime() <= 0) {
                 if (userTraceInformation.getWaitingTime() <= 0) {
-
                     // get unique destination POI
                     POI destination;
                     POI location = userTraceInformation.getNewPOI();
                     do {
-                        destination = this.pointsOfInterest.get(
-                                random.nextInt(this.pointsOfInterest.size())
-                        );
-                    }while (destination.equals(location));
+                        destination = this.pointsOfInterest.get(this.randPoiIndex());
+                    } while (destination.equals(location));
 
-                    // actualize data
-                    userTraceInformation.updatePOIs(
-                            location,
-                            destination
-                    );
-                    long waitingTime = random.nextInt(10) + 5;
-                    LocalDateTime exitTime = time.plusMinutes(waitingTime);
-                    userTraceInformation.setWaitingTime(waitingTime);
+                    // update data
+                    long waitingTime = this.randWaitingTime();
+                    userTraceInformation.updateInfo(location, destination, waitingTime);
 
                     // generate trace from data
-                    newTrace = new Trace(
+                    LocalDateTime exitTime = time.plusMinutes(waitingTime);
+                    Trace newTrace = new Trace(
                             userTraceInformation.getUser(),
                             userTraceInformation.getNewPOI(),
                             time,
                             exitTime);
+
                     traces.add(newTrace);
                 } else {
-                    userTraceInformation.decreaseWaitingTime(GeneratorConsts.TIME_STEP);
+                    userTraceInformation.decreaseWaitingTime(timeStep);
                 }
             } else {
-                userTraceInformation.decreaseRemainingTravelTime(GeneratorConsts.TIME_STEP);
+                userTraceInformation.decreaseRemainingTravelTime(timeStep);
             }
         }
         return traces;
@@ -86,13 +114,13 @@ public class TraceGenerator {
         private long waitingTime;
         private double velocity;
 
-        public UserTraceInformation(User user, POI startPOI) {
+        public UserTraceInformation(User user, POI startPOI, double velocity) {
             this.user = user;
             this.lastPOI = null;
             this.newPOI = startPOI;
             this.remainingTravelTime = 0;
             this.waitingTime = 0;
-            this.velocity = (random.nextDouble() + 2.) * 10; // 20 - 30
+            this.velocity = velocity;
         }
 
         public void decreaseRemainingTravelTime(long minutes) {
@@ -103,7 +131,13 @@ public class TraceGenerator {
             this.waitingTime -= minutes;
         }
 
-        public void updatePOIs(POI lastPOI, POI newPOI) {
+        public void updateInfo(POI lastPOI, POI newPOI, long waitingTime) {
+            this.updatePOIs(lastPOI, newPOI);
+            this.setWaitingTime(waitingTime);
+
+        }
+
+        private void updatePOIs(POI lastPOI, POI newPOI) {
             this.lastPOI = lastPOI;
             this.newPOI = newPOI;
 

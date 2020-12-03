@@ -1,7 +1,6 @@
 package model;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -12,12 +11,9 @@ import java.time.LocalDateTime;
 @ToString
 @Getter
 public class Trace {
-    private User user;
-    private POI poinOfInterest;
-    private LocalDateTime entryTime;
-    private LocalDateTime exitTime;
+    private final User user;
+    private final POI pointOfInterest;
+    private final LocalDateTime entryTime;
+    private final LocalDateTime exitTime;
 
-//    public String toString() {
-//        return user.getUserID() + " " + poinOfInterest.getGeolocalization(); //  + " " + entryTime + " " + exitTime;
-//    }
 }

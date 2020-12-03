@@ -2,24 +2,23 @@ package generation;
 
 import model.Geolocalization;
 import model.POI;
-import model.POIType;
 import org.apache.commons.math3.distribution.ExponentialDistribution;
-import org.apache.commons.math3.distribution.UniformIntegerDistribution;
 import org.apache.commons.math3.distribution.UniformRealDistribution;
+import reader.POIDataContainer;
 
 import java.util.UUID;
 
 public class POIFactory {
     private final ExponentialDistribution distanceExponentialDistribution;
     private final UniformRealDistribution angleUniformRealDistribution;
-    private final UniformIntegerDistribution typeUniformDistribution;
+    private final POIRandomizer poiRandomizer;
 
     private static final POIFactory instance = new POIFactory();
 
     private POIFactory() {
         distanceExponentialDistribution = new ExponentialDistribution(0.5);
         angleUniformRealDistribution = new UniformRealDistribution();
-        typeUniformDistribution = new UniformIntegerDistribution(0,2);
+        poiRandomizer = new POIRandomizer();
     }
 
     public static POIFactory getInstance() {
@@ -39,12 +38,14 @@ public class POIFactory {
             );
         } while (!isGeolocalizationInBoundaries(geolocalization));
 
+        POIDataContainer additionalData = poiRandomizer.getRandomPOIAdditionalData();
+
         return POI.builder()
                 .id(UUID.randomUUID())
-                .name("")
-                .description("")
+                .name(additionalData.getName())
+                .description(additionalData.getDescription())
                 .geolocalization(geolocalization)
-                .type(POIType.getPOIType(typeUniformDistribution.sample()))
+                .type(additionalData.getType())
                 .build();
     }
 

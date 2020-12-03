@@ -7,8 +7,8 @@ import java.util.UUID;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
 @Builder
+@Data
 public class POI {
 
     private UUID id;
@@ -16,4 +16,6 @@ public class POI {
     private String description;
     private Geolocalization geolocalization;
     private POIType type;
+    private String experimentId;
+
 }
