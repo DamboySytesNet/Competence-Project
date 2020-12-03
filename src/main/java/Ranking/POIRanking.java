@@ -1,16 +1,15 @@
 package Ranking;
 
-import com.sun.tools.jconsole.JConsoleContext;
 import model.POI;
 import model.Trace;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.Period;
+
 import java.util.*;
 
+
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+
 import lombok.Data;
 
 
@@ -22,7 +21,7 @@ import lombok.Data;
 public class POIRanking {
 
     //visitors count in POI ranking
-    public static HashMap<POI, Integer> generateVisitorsCountRanking(List<POI> POIs, List<Trace> traces){
+    public static HashMap<POI, Integer> generateVisitorsCountRanking(List<Trace> traces){
 
         HashMap<POI,Integer> visitorsCount = new HashMap<>();
         for(Trace trace : traces) {
@@ -33,7 +32,7 @@ public class POIRanking {
     }
 
     //time spent in POI ranking
-    public static  HashMap<POI, Integer> generateTimeSpentRanking(List<POI> POIs, List<Trace> traces){
+    public static  HashMap<POI, Integer> generateTimeSpentRanking(List<Trace> traces){
         HashMap<POI,Integer> totalTimeSpent = new HashMap<>();
         for(Trace trace : traces) {
             Duration timeSpent = Duration.between(trace.getEntryTime(), trace.getExitTime());

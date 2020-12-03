@@ -50,9 +50,8 @@ public class RankingTest {
     @Test
     public void rankingTest() {
 
-        HashMap<POI, Integer> visitorsRanking = POIRanking.generateVisitorsCountRanking(pois, traces);
-        HashMap<POI, Integer> timeRanking = POIRanking.generateTimeSpentRanking(pois, traces);
-
+        HashMap<POI, Integer> visitorsRanking = POIRanking.generateVisitorsCountRanking(traces);
+        HashMap<POI, Integer> timeRanking = POIRanking.generateTimeSpentRanking(traces);
 
         Assert.assertTrue(traces.size() != 0);
         Assert.assertTrue(users.size() != 0);
