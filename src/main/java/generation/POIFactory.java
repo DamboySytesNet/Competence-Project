@@ -2,6 +2,7 @@ package generation;
 
 import model.Geolocalization;
 import model.POI;
+import model.User;
 import org.apache.commons.math3.distribution.ExponentialDistribution;
 import org.apache.commons.math3.distribution.UniformRealDistribution;
 import reader.POIDataContainer;
@@ -26,6 +27,10 @@ public class POIFactory {
     }
 
     public POI generate() {
+        return generate("");
+    }
+
+    public POI generate(String experimentId) {
 
         Geolocalization geolocalization;
         do {
@@ -46,6 +51,7 @@ public class POIFactory {
                 .description(additionalData.getDescription())
                 .geolocalization(geolocalization)
                 .type(additionalData.getType())
+                .experimentId(experimentId)
                 .build();
     }
 
