@@ -47,11 +47,9 @@ public class StatisticsTest {
         TraceGenerator traceGenerator = new TraceGenerator(users, pointsOfInterest, currentTime);
 
         System.out.println(users);
-        System.out.println();
 
         for (int i = 0; i < 60; i++) {
             traces.addAll(traceGenerator.generateTraces(currentTime));
-            Thread.sleep(1000);
             currentTime = currentTime.plusMinutes(GeneratorConsts.TIME_STEP);
         }
 
