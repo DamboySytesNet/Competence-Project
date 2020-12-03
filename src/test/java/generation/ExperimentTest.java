@@ -29,7 +29,7 @@ public class ExperimentTest {
         Assert.assertNotNull(experiment.getCurrentTime());
         Assert.assertNotNull(experiment.getTraceGenerator());
 
-        Assert.assertTrue(experiment.getTraces().size() > 100);
+        Assert.assertTrue(experiment.getTraces().size() >= 100);
         Assert.assertEquals(10, experiment.getUsers().size());
         Assert.assertEquals(10, experiment.getPois().size());
 
