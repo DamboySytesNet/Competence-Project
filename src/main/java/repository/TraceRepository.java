@@ -5,7 +5,9 @@ import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
 import model.TraceData;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -27,29 +29,41 @@ public class TraceRepository {
         StringBuilder sb = new StringBuilder("CREATE TABLE IF NOT EXISTS ")
                 .append(TABLE_NAME)
                 .append("(")
-                .append("id uuid PRIMARY KEY, ")
+                .append("id uuid, ")
                 .append("user_id uuid,")
                 .append("point_of_interest_id uuid,")
                 .append("entry_time timestamp,")
-                .append("exit_time timestamp);");
+                .append("exit_time timestamp,")
+                .append("creation_time timestamp,")
+                .append("PRIMARY KEY (id));");
         session.execute(sb.toString());
     }
 
+//    public void dropTable() {
+//        StringBuilder sb = new StringBuilder("DROP TABLE ");
+//        sb.append(TABLE_NAME);
+//        sb.append(";");
+//        session.execute(sb.toString());
+//    }
+
     public void insertTrace(TraceData traceData) {
+        ZoneOffset offset = ZoneOffset.systemDefault().getRules().getOffset(LocalDateTime.now());
+
         StringBuilder sb = new StringBuilder("INSERT INTO ")
                 .append(TABLE_NAME)
                 .append("(id, user_id, point_of_interest_id, entry_time, exit_time) ")
                 .append("VALUES (")
-                .append(traceData.getId())
-                .append(", '")
-                .append(traceData.getUserId())
-                .append("', '")
-                .append(traceData.getPointOfInterestId())
-                .append("', '")
-                .append(traceData.getEntryTime())
-                .append("', '")
-                .append(traceData.getExitTime())
-                .append("');");
+                .append(traceData.getId().toString())
+                .append(", ")
+                .append(traceData.getUserId().toString())
+                .append(", ")
+                .append(traceData.getPointOfInterestId().toString())
+                .append(", ")
+                .append(traceData.getEntryTime().toInstant(offset).toEpochMilli())
+                .append(", ")
+                .append(traceData.getExitTime().toInstant(offset).toEpochMilli())
+                .append(");");
+
         session.execute(sb.toString());
     }
 
@@ -57,28 +71,24 @@ public class TraceRepository {
         StringBuilder tempIds = new StringBuilder("");
 
         for (int i = 0; i < ids.size() - 1; i++) {
-            tempIds.append("'");
             tempIds.append(ids.get(i).toString());
-            tempIds.append("'");
             tempIds.append(',');
         }
-        tempIds.append("'");
         tempIds.append(ids.get(ids.size() - 1));
-        tempIds.append("'");
 
         StringBuilder sb = new StringBuilder("DELETE FROM ")
                 .append(TABLE_NAME)
                 .append(" WHERE id IN (")
                 .append(tempIds)
-                .append(")';");
+                .append(");");
 
-        final String query = sb.toString();
-        session.execute(query);
+        session.execute(sb.toString());
     }
 
     public List<TraceData> getTraces(long offset, long limit) {
         StringBuilder sb = new StringBuilder("SELECT * FROM ")
                 .append(TABLE_NAME);
+
 
         final String query = sb.toString();
         ResultSet rs = session.execute(query);
@@ -105,5 +115,14 @@ public class TraceRepository {
             traceDataList.add(traceData);
         }
         return traceDataList;
+    }
+
+    public long getTotalNumberOfTraces() {
+        StringBuilder sb = new StringBuilder("SELECT COUNT(*) FROM ")
+                .append(TABLE_NAME)
+                .append(";");
+
+        ResultSet rs = session.execute(sb.toString());
+        return rs.one().getLong(0);
     }
 }

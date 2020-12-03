@@ -9,12 +9,12 @@ public class KeyspaceRepository {
         this.session = session;
     }
 
-    public void createKeyspace(String keyspaceName, String replicatioonStrategy, int numberOfReplicas) {
+    public void createKeyspace(String keyspaceName, String replicationStrategy, int numberOfReplicas) {
         StringBuilder sb = new StringBuilder("CREATE KEYSPACE IF NOT EXISTS ")
                 .append(keyspaceName)
                 .append(" WITH replication = {")
                 .append("'class':'")
-                .append(replicatioonStrategy)
+                .append(replicationStrategy)
                 .append("','replication_factor':")
                 .append(numberOfReplicas)
                 .append("};");
