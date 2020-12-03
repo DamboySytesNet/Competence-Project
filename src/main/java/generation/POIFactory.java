@@ -6,6 +6,8 @@ import org.apache.commons.math3.distribution.ExponentialDistribution;
 import org.apache.commons.math3.distribution.UniformRealDistribution;
 import reader.POIDataContainer;
 
+import java.util.UUID;
+
 public class POIFactory {
     private final ExponentialDistribution distanceExponentialDistribution;
     private final UniformRealDistribution angleUniformRealDistribution;
@@ -39,6 +41,7 @@ public class POIFactory {
         POIDataContainer additionalData = poiRandomizer.getRandomPOIAdditionalData();
 
         return POI.builder()
+                .id(UUID.randomUUID())
                 .name(additionalData.getName())
                 .description(additionalData.getDescription())
                 .geolocalization(geolocalization)
