@@ -5,14 +5,19 @@ import model.Trace;
 
 import java.time.Duration;
 
-import java.util.*;
+
+import java.util.List;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Collections;
+import java.util.Map;
 
 
 import lombok.AllArgsConstructor;
-
 import lombok.Data;
 
-
+import static java.util.Map.Entry.comparingByValue;
+import static java.util.stream.Collectors.toMap;
 
 
 @AllArgsConstructor
@@ -21,43 +26,38 @@ import lombok.Data;
 public class POIRanking {
 
     //visitors count in POI ranking
-    public static HashMap<POI, Integer> generateVisitorsCountRanking(List<Trace> traces){
-
+    //true == descending / false == ascending
+    public static HashMap<POI, Integer> generateVisitorsCountRanking(List<Trace> traces, boolean direction){
         HashMap<POI,Integer> visitorsCount = new HashMap<>();
         for(Trace trace : traces) {
             visitorsCount.put(trace.getPointOfInterest(), visitorsCount.getOrDefault(trace.getPointOfInterest(), 0) + 1);
         }
-
-        return sortByValue(visitorsCount);
+        return sortByValue(visitorsCount, direction);
     }
 
     //time spent in POI ranking
-    public static  HashMap<POI, Integer> generateTimeSpentRanking(List<Trace> traces){
+    //true == descending / false == ascending
+    public static  HashMap<POI, Integer> generateTimeSpentRanking(List<Trace> traces, boolean direction){
         HashMap<POI,Integer> totalTimeSpent = new HashMap<>();
         for(Trace trace : traces) {
             Duration timeSpent = Duration.between(trace.getEntryTime(), trace.getExitTime());
             totalTimeSpent.put(trace.getPointOfInterest(), totalTimeSpent.getOrDefault(trace.getPointOfInterest(), 0) + (int) timeSpent.toMinutes());
         }
-        return sortByValue(totalTimeSpent);
+        return sortByValue(totalTimeSpent, direction);
+    }
+    //true == descending / false == ascending
+    public static HashMap<POI, Integer> sortByValue(HashMap<POI, Integer> toBeSorted, boolean direction ){
+        HashMap<POI,Integer> sorted = toBeSorted
+                .entrySet()
+                .stream()
+                .sorted(direction ? Collections.reverseOrder(Map.Entry.comparingByValue()) : comparingByValue())
+                .collect(
+                        toMap(Map.Entry::getKey,
+                                Map.Entry::getValue,
+                                (e1, e2) -> e2,
+                                LinkedHashMap::new));
+                return sorted;
     }
 
 
-
-    public static HashMap<POI, Integer> sortByValue(HashMap<POI, Integer> toBeSorted)
-    {
-        List<Map.Entry<POI, Integer> > list = new LinkedList<>(toBeSorted.entrySet());
-
-        Collections.sort(list, new Comparator<Map.Entry<POI, Integer>>() {
-            public int compare(Map.Entry<POI, Integer> o1,Map.Entry<POI, Integer> o2)
-            {
-                return (o2.getValue()).compareTo(o1.getValue());
-            }
-        });
-
-        HashMap<POI, Integer> temp = new LinkedHashMap<POI, Integer>();
-        for (Map.Entry<POI, Integer> aa : list) {
-            temp.put(aa.getKey(), aa.getValue());
-        }
-        return temp;
-    }
 }

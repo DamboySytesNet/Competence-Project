@@ -50,16 +50,38 @@ public class RankingTest {
     @Test
     public void rankingTest() {
 
-        HashMap<POI, Integer> visitorsRanking = POIRanking.generateVisitorsCountRanking(traces);
-        HashMap<POI, Integer> timeRanking = POIRanking.generateTimeSpentRanking(traces);
+        HashMap<POI, Integer> visitorsRankingDesc = POIRanking.generateVisitorsCountRanking(traces,true);
+        HashMap<POI, Integer> visitorsRankingAsc = POIRanking.generateVisitorsCountRanking(traces,false);
+        HashMap<POI, Integer> timeRankingDesc = POIRanking.generateTimeSpentRanking(traces, true);
+        HashMap<POI, Integer> timeRankingAsc = POIRanking.generateTimeSpentRanking(traces, false);
 
         Assert.assertTrue(traces.size() != 0);
         Assert.assertTrue(users.size() != 0);
-        for(POI poi : visitorsRanking.keySet()){
-           Assert.assertTrue(visitorsRanking.get(poi) > 0 );
+
+        Integer[] tableToTest = new Integer[visitorsRankingAsc.values().size()];
+
+        //visitorsASC
+        tableToTest =  visitorsRankingAsc.values().toArray(tableToTest);
+        for(int i = 0 ; i < tableToTest.length - 1  ; i++){
+                Assert.assertTrue(tableToTest[i] <= tableToTest[i+1]);
         }
-        for(POI poi : timeRanking.keySet()){
-            Assert.assertTrue(timeRanking.get(poi) > 0 );
+
+        //visitorsDESC
+        tableToTest =  visitorsRankingDesc.values().toArray(tableToTest);
+        for(int i = 0 ; i < tableToTest.length - 1  ; i++){
+            Assert.assertTrue(tableToTest[i] >= tableToTest[i+1]);
+        }
+
+        //timespentASC
+        tableToTest =  timeRankingAsc.values().toArray(tableToTest);
+        for(int i = 0 ; i < tableToTest.length - 1 ; i++){
+            Assert.assertTrue(tableToTest[i] <= tableToTest[i+1]);
+        }
+
+        //timespentDESC
+        tableToTest =  timeRankingDesc.values().toArray(tableToTest);
+        for(int i = 0 ; i < tableToTest.length - 1 ; i++){
+            Assert.assertTrue(tableToTest[i] >= tableToTest[i+1]);
         }
     }
 }
