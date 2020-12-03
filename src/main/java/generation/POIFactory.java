@@ -2,7 +2,6 @@ package generation;
 
 import model.Geolocalization;
 import model.POI;
-import model.User;
 import org.apache.commons.math3.distribution.ExponentialDistribution;
 import org.apache.commons.math3.distribution.UniformRealDistribution;
 import reader.POIDataContainer;
