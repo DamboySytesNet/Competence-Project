@@ -54,5 +54,47 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.22</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/ai.djl/api -->
+        <dependency>
+            <groupId>ai.djl</groupId>
+            <artifactId>api</artifactId>
+            <version>0.8.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/ai.djl/basicdataset -->
+        <dependency>
+            <groupId>ai.djl</groupId>
+            <artifactId>basicdataset</artifactId>
+            <version>0.8.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/ai.djl/model-zoo -->
+        <dependency>
+            <groupId>ai.djl</groupId>
+            <artifactId>model-zoo</artifactId>
+            <version>0.8.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/ai.djl/examples -->
+        <dependency>
+            <groupId>ai.djl</groupId>
+            <artifactId>examples</artifactId>
+            <version>0.6.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/ai.djl.mxnet/mxnet-engine -->
+        <dependency>
+            <groupId>ai.djl.mxnet</groupId>
+            <artifactId>mxnet-engine</artifactId>
+            <version>0.8.0</version>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/ai.djl.mxnet/mxnet-native-mkl -->
+        <dependency>
+            <groupId>ai.djl.mxnet</groupId>
+            <artifactId>mxnet-native-mkl</artifactId>
+            <version>1.7.0-backport</version>
+        </dependency>
+
+
+
+
+
     </dependencies>
 </project>
