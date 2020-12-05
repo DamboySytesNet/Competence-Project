@@ -4,12 +4,10 @@ import generation.GeneratorConsts;
 import generation.POIFactory;
 import generation.TraceGenerator;
 import generation.UserFactory;
-import model.Geolocalization;
 import model.POI;
 import model.Trace;
 import model.User;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
@@ -44,14 +42,10 @@ public class StatisticsTest {
         }
 
         LocalDateTime currentTime = startTime;
-        TraceGenerator traceGenerator = new TraceGenerator(users, pointsOfInterest);
-
-        System.out.println(users);
-        System.out.println();
+        TraceGenerator traceGenerator = new TraceGenerator(users, pointsOfInterest, currentTime);
 
         for (int i = 0; i < 60; i++) {
-            traces.addAll(traceGenerator.generateTrace(currentTime));
-            Thread.sleep(1000);
+            traces.addAll(traceGenerator.generateTraces(currentTime));
             currentTime = currentTime.plusMinutes(GeneratorConsts.TIME_STEP);
         }
 
@@ -63,7 +57,7 @@ public class StatisticsTest {
 
         for (Trace trace : traces) {
             System.out.println("User: " + trace.getUser().getUserID()
-                    + ", time in POI " + trace.getPoinOfInterest().getId()
+                    + ", time in POI " + trace.getPointOfInterest().getId()
                     + ", (min): " + ChronoUnit.SECONDS.between(trace.getEntryTime(), trace.getExitTime()) / 60.0);
         }
 
@@ -77,13 +71,13 @@ public class StatisticsTest {
         for (User user : users) {
             double route = 0.0;
             List<UUID> uniqueIdList = new ArrayList<>();
-            uniqueIdList.add(traces.get(0).getPoinOfInterest().getId());
+            uniqueIdList.add(traces.get(0).getPointOfInterest().getId());
             for (int i = 1; i < traces.size(); i++) {
-                if (!uniqueIdList.contains(traces.get(i).getPoinOfInterest().getId())
+                if (!uniqueIdList.contains(traces.get(i).getPointOfInterest().getId())
                         && traces.get(i).getUser().getUserID().equals(user.getUserID())) {
-                    uniqueIdList.add(traces.get(i).getPoinOfInterest().getId());
-                    route += traces.get(i - 1).getPoinOfInterest().getGeolocalization()
-                            .getDistance(traces.get(i).getPoinOfInterest().getGeolocalization());
+                    uniqueIdList.add(traces.get(i).getPointOfInterest().getId());
+                    route += traces.get(i - 1).getPointOfInterest().getGeolocalization()
+                            .getDistance(traces.get(i).getPointOfInterest().getGeolocalization());
                 }
 
             }

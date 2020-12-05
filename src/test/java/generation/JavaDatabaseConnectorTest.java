@@ -76,9 +76,9 @@ public class JavaDatabaseConnectorTest {
     public void checkPOICrud() throws SQLException {
         //given:
         POIRepository poiRepository = new POIRepository();
-        POI stPOI = new POI("testName", "testDescription",
+        POI stPOI = new POI(UUID.randomUUID(), "testName", "testDescription",
                 new Geolocalization(22.11, 33.43), POIType.outdoor, "1");
-        POI ndPOI = new POI("testName2", "testDescriptionABC",
+        POI ndPOI = new POI(UUID.randomUUID(), "testName2", "testDescriptionABC",
                 new Geolocalization(12.12, 66.13), POIType.outdoor, "1");
 
         //when:
