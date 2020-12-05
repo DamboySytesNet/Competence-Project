@@ -76,6 +76,7 @@ public class JavaDatabaseConnectorTest {
     public void checkPOICrud() throws SQLException {
         //given:
         POIRepository poiRepository = new POIRepository();
+
         POI stPOI = POI.builder()
                 .name("testName")
                 .description("testDescription")
@@ -91,6 +92,7 @@ public class JavaDatabaseConnectorTest {
                 .type(POIType.outdoor)
                 .experimentId("1")
                 .build();
+
 
         //when:
         boolean stAdded = poiRepository.save(stPOI);
