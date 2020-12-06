@@ -42,6 +42,14 @@ public class TraceRepositoryTest {
 
         traceRepository.insertTrace(traceData);
 
+        TraceData savedData = traceRepository.getTraceById(traceData.getId());
+
+        Assert.assertEquals(traceData.getId(), savedData.getId());
+        Assert.assertEquals(traceData.getUserId(), savedData.getUserId());
+        Assert.assertEquals(traceData.getPointOfInterestId(), savedData.getPointOfInterestId());
+        Assert.assertEquals(traceData.getEntryTime().toString().substring(0, 23), savedData.getEntryTime().toString());
+        Assert.assertEquals(traceData.getExitTime().toString().substring(0, 23), savedData.getExitTime().toString());
+
         Assert.assertEquals(totalTraces + 1, traceRepository.getTotalNumberOfTraces());
 
         traceRepository.deleteTraces(Collections.singletonList(traceData.getId()));

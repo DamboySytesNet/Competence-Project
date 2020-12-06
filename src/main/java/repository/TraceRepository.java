@@ -78,10 +78,20 @@ public class TraceRepository {
         session.execute(sb.toString());
     }
 
+    public TraceData getTraceById(UUID id) {
+        StringBuilder sb = new StringBuilder("SELECT * FROM ")
+                .append(TABLE_NAME)
+                .append(" WHERE id = ")
+                .append(id.toString())
+                .append(";");
+
+        ResultSet rs = session.execute(sb.toString());
+        return mapRowToTraceData(rs.one());
+    }
+
     public List<TraceData> getTraces(long offset, long limit) {
         StringBuilder sb = new StringBuilder("SELECT * FROM ")
                 .append(TABLE_NAME);
-
 
         final String query = sb.toString();
         ResultSet rs = session.execute(query);
@@ -91,23 +101,9 @@ public class TraceRepository {
                 .limit(limit)
                 .collect(Collectors.toList());
 
-        List<TraceData> traceDataList = new ArrayList<>();
-
-        for (Row r : rows) {
-            TraceData traceData = TraceData.builder()
-                    .id(r.getUUID("id"))
-                    .userId(r.getUUID("user_id"))
-                    .pointOfInterestId(r.getUUID("point_of_interest_id"))
-                    .entryTime(r.getTimestamp("entry_time").toInstant()
-                            .atZone(ZoneId.systemDefault())
-                            .toLocalDateTime())
-                    .exitTime(r.getTimestamp("exit_time").toInstant()
-                            .atZone(ZoneId.systemDefault())
-                            .toLocalDateTime())
-                    .build();
-            traceDataList.add(traceData);
-        }
-        return traceDataList;
+        return rows.stream()
+                .map(this::mapRowToTraceData)
+                .collect(Collectors.toList());
     }
 
     public long getTotalNumberOfTraces() {
@@ -117,5 +113,19 @@ public class TraceRepository {
 
         ResultSet rs = session.execute(sb.toString());
         return rs.one().getLong(0);
+    }
+
+    private TraceData mapRowToTraceData(Row r) {
+        return TraceData.builder()
+                .id(r.getUUID("id"))
+                .userId(r.getUUID("user_id"))
+                .pointOfInterestId(r.getUUID("point_of_interest_id"))
+                .entryTime(r.getTimestamp("entry_time").toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDateTime())
+                .exitTime(r.getTimestamp("exit_time").toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDateTime())
+                .build();
     }
 }
