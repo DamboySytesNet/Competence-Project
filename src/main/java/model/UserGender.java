@@ -10,4 +10,4 @@ public enum UserGender {
         return values()[x];
     }
 
-    }
+}
