@@ -44,6 +44,7 @@ public class StatisticsTest {
         LocalDateTime currentTime = startTime;
         TraceGenerator traceGenerator = new TraceGenerator(users, pointsOfInterest, currentTime);
 
+
         for (int i = 0; i < 60; i++) {
             traces.addAll(traceGenerator.generateTraces(currentTime));
             currentTime = currentTime.plusMinutes(GeneratorConsts.TIME_STEP);

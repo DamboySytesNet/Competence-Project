@@ -26,6 +26,10 @@ public class POIFactory {
     }
 
     public POI generate() {
+        return generate("");
+    }
+
+    public POI generate(String experimentId) {
 
         Geolocalization geolocalization;
         do {
@@ -46,6 +50,7 @@ public class POIFactory {
                 .description(additionalData.getDescription())
                 .geolocalization(geolocalization)
                 .type(additionalData.getType())
+                .experimentId(experimentId)
                 .build();
     }
 
