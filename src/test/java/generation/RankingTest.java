@@ -1,6 +1,6 @@
 package generation;
 
-import Ranking.POIRanking;
+import ranking.POIRanking;
 import model.POI;
 import model.Trace;
 import model.User;
@@ -28,11 +28,11 @@ public class RankingTest {
         this.pois = new LinkedList<>();
          this.traces = new LinkedList<>();
          //gen Users
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 500000; i++) {
             this.users.add(UserFactory.getInstance().generate());
         }
         //gen Pois
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 2000000; i++) {
             this.pois.add(POIFactory.getInstance().generate());
         }
 

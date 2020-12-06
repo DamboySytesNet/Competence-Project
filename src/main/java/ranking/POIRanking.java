@@ -1,4 +1,4 @@
-package Ranking;
+package ranking;
 
 import model.POI;
 import model.Trace;
