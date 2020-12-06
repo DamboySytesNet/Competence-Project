@@ -27,30 +27,30 @@ public class POIRanking {
 
     //visitors count in POI ranking
     //true == descending / false == ascending
-    public static HashMap<POI, Integer> generateVisitorsCountRanking(List<Trace> traces, boolean direction){
+    public static HashMap<POI, Integer> generateVisitorsCountRanking(List<Trace> traces, boolean descending){
         HashMap<POI,Integer> visitorsCount = new HashMap<>();
         for(Trace trace : traces) {
             visitorsCount.put(trace.getPointOfInterest(), visitorsCount.getOrDefault(trace.getPointOfInterest(), 0) + 1);
         }
-        return sortByValue(visitorsCount, direction);
+        return sortByValue(visitorsCount, descending);
     }
 
     //time spent in POI ranking
     //true == descending / false == ascending
-    public static  HashMap<POI, Integer> generateTimeSpentRanking(List<Trace> traces, boolean direction){
+    public static  HashMap<POI, Integer> generateTimeSpentRanking(List<Trace> traces, boolean descending){
         HashMap<POI,Integer> totalTimeSpent = new HashMap<>();
         for(Trace trace : traces) {
             Duration timeSpent = Duration.between(trace.getEntryTime(), trace.getExitTime());
             totalTimeSpent.put(trace.getPointOfInterest(), totalTimeSpent.getOrDefault(trace.getPointOfInterest(), 0) + (int) timeSpent.toMinutes());
         }
-        return sortByValue(totalTimeSpent, direction);
+        return sortByValue(totalTimeSpent, descending);
     }
     //true == descending / false == ascending
-    public static HashMap<POI, Integer> sortByValue(HashMap<POI, Integer> toBeSorted, boolean direction ){
+    public static HashMap<POI, Integer> sortByValue(HashMap<POI, Integer> toBeSorted, boolean descending ){
         HashMap<POI,Integer> sorted = toBeSorted
                 .entrySet()
                 .stream()
-                .sorted(direction ? Collections.reverseOrder(Map.Entry.comparingByValue()) : comparingByValue())
+                .sorted(descending ? Collections.reverseOrder(Map.Entry.comparingByValue()) : comparingByValue())
                 .collect(
                         toMap(Map.Entry::getKey,
                                 Map.Entry::getValue,
