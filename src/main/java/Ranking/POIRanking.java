@@ -47,7 +47,7 @@ public class POIRanking {
     }
     //true == descending / false == ascending
     public static HashMap<POI, Integer> sortByValue(HashMap<POI, Integer> toBeSorted, boolean descending ){
-        HashMap<POI,Integer> sorted = toBeSorted
+        return toBeSorted
                 .entrySet()
                 .stream()
                 .sorted(descending ? Collections.reverseOrder(Map.Entry.comparingByValue()) : comparingByValue())
@@ -56,7 +56,6 @@ public class POIRanking {
                                 Map.Entry::getValue,
                                 (e1, e2) -> e2,
                                 LinkedHashMap::new));
-                return sorted;
     }
 
 
