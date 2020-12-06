@@ -8,10 +8,7 @@ import model.TraceData;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -39,12 +36,12 @@ public class TraceRepository {
         session.execute(sb.toString());
     }
 
-//    public void dropTable() {
-//        StringBuilder sb = new StringBuilder("DROP TABLE ");
-//        sb.append(TABLE_NAME);
-//        sb.append(";");
-//        session.execute(sb.toString());
-//    }
+    public void dropTable() {
+        StringBuilder sb = new StringBuilder("DROP TABLE ");
+        sb.append(TABLE_NAME);
+        sb.append(";");
+        session.execute(sb.toString());
+    }
 
     public void insertTrace(TraceData traceData) {
         ZoneOffset offset = ZoneOffset.systemDefault().getRules().getOffset(LocalDateTime.now());
@@ -68,13 +65,9 @@ public class TraceRepository {
     }
 
     public void deleteTraces(List<UUID> ids) {
-        StringBuilder tempIds = new StringBuilder("");
-
-        for (int i = 0; i < ids.size() - 1; i++) {
-            tempIds.append(ids.get(i).toString());
-            tempIds.append(',');
-        }
-        tempIds.append(ids.get(ids.size() - 1));
+        String tempIds = ids.stream()
+                .map(UUID::toString)
+                .collect(Collectors.joining(","));
 
         StringBuilder sb = new StringBuilder("DELETE FROM ")
                 .append(TABLE_NAME)
