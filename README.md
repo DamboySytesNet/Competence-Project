@@ -1,3 +1,8 @@
+## Run Cassandra in Docker container
+```
+ docker run -p 9042:9042 cassandra:latest
+```
+
 ## How to JavaFX
 Żeby wyświetliło nam się GUI:
 ```
