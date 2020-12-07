@@ -7,86 +7,111 @@ import generation.UserFactory;
 import model.POI;
 import model.Trace;
 import model.User;
-import org.junit.Before;
+import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 public class StatisticsTest {
 
-    List<Trace> traces;
-    POIFactory poiFactory;
-    UserFactory userFactory;
-    List<POI> pointsOfInterest;
-    List<User> users;
-    LocalDateTime startTime;
+    static List<Trace> traces;
+    static POIFactory poiFactory;
+    static UserFactory userFactory;
+    static List<POI> pointsOfInterest;
+    static List<User> users;
+    static LocalDateTime startTime;
+    static Statistics stats;
 
 
-    @Before
-    public void init() throws InterruptedException {
+    @BeforeClass
+    public static void init() {
         poiFactory = POIFactory.getInstance();
         userFactory = UserFactory.getInstance();
         pointsOfInterest = new LinkedList<>();
         users = new LinkedList<>();
         startTime = LocalDateTime.now();
         traces = new LinkedList<>();
+        stats = new Statistics();
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 3; i++) {
             pointsOfInterest.add(poiFactory.generate());
         }
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 1; i++) {
             users.add(userFactory.generate());
         }
 
         LocalDateTime currentTime = startTime;
         TraceGenerator traceGenerator = new TraceGenerator(users, pointsOfInterest, currentTime);
 
-
         for (int i = 0; i < 60; i++) {
             traces.addAll(traceGenerator.generateTraces(currentTime));
             currentTime = currentTime.plusMinutes(GeneratorConsts.TIME_STEP);
         }
 
+        stats.addNewTrace(traces.get(0), null);
+        for (int i = 1; i < traces.size(); i++) {
+            stats.addNewTrace(traces.get(i), traces.get(i - 1));
+        }
     }
 
-
     @Test
-    public void generateWaitingTimeStatisticsTest() {
-
+    public void testLengthOfStayStatistics() {
+        System.out.println("\n--------------TRACES");
         for (Trace trace : traces) {
-            System.out.println("User: " + trace.getUser().getUserID()
-                + ", time in POI " + trace.getPointOfInterest().getId()
-                + ", (min): " + ChronoUnit.SECONDS.between(trace.getEntryTime(), trace.getExitTime()) / 60.0);
+            System.out.println(
+                "POI: " + trace.getPointOfInterest().getId() + " " +
+                    ChronoUnit.SECONDS.between(
+                        trace.getEntryTime(),
+                        trace.getExitTime()) / 60.0 + " min"
+            );
         }
+        System.out.println();
 
+        System.out.println(stats.getLengthOfStay(users.get(0), pointsOfInterest.get(0)));
+        System.out.println();
+
+        Assert.assertTrue(true);
     }
 
     @Test
-    public void generateLongestRouteStatisticsTest() {
+    public void testLongestRouteStatistics() {
+        System.out.println("\n--------------TRACES");
+        for (int i = 1; i < traces.size(); i++) {
+            System.out.println(traces.get(i).getPointOfInterest().getGeolocalization()
+                .getDistance(traces.get(i - 1).getPointOfInterest().getGeolocalization()));
+        }
+        System.out.println();
 
-        Map<User, Double> userLongestRoute = new HashMap<>();
+        System.out.println(stats.getLongestRoute(users.get(0)));
+        System.out.println();
 
-        for (User user : users) {
-            double route = 0.0;
-            List<UUID> uniqueIdList = new ArrayList<>();
-            uniqueIdList.add(traces.get(0).getPointOfInterest().getId());
-            for (int i = 1; i < traces.size(); i++) {
-                if (!uniqueIdList.contains(traces.get(i).getPointOfInterest().getId())
-                    && traces.get(i).getUser().getUserID().equals(user.getUserID())) {
-                    uniqueIdList.add(traces.get(i).getPointOfInterest().getId());
-                    route += traces.get(i - 1).getPointOfInterest().getGeolocalization()
-                        .getDistance(traces.get(i).getPointOfInterest().getGeolocalization());
-                }
+        Assert.assertTrue(true);
+    }
 
-            }
-            userLongestRoute.put(user, route);
-
+    @Test
+    public void testPopularityStatistics() {
+        System.out.println("--------------POIs");
+        for (POI poi : pointsOfInterest) {
+            System.out.println(poi.getId());
         }
 
-        System.out.println(userLongestRoute.toString());
+        System.out.println("\n--------------TRACES");
+        for (Trace trace : traces) {
+            System.out.println(trace.getPointOfInterest().getId());
+        }
+        System.out.println();
 
+        System.out.println(stats.getMostPopularPOI(pointsOfInterest.get(0)));
+        System.out.println();
+        System.out.println(stats.getMostPopularPOI(pointsOfInterest.get(1)));
+        System.out.println();
+        System.out.println(stats.getMostPopularPOI(pointsOfInterest.get(2)));
+
+        Assert.assertTrue(true);
     }
 }
