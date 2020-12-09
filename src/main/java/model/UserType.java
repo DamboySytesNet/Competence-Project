@@ -5,9 +5,7 @@ public enum UserType {
     teacher,
     stuff;
 
-
     public static UserType getUserType(int x) {
         return values()[x];
     }
-
-    }
+}
