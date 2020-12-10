@@ -12,10 +12,10 @@ import ai.djl.util.Progress;
 import java.io.IOException;
 import java.util.List;
 
-public class MyDataset extends RandomAccessDataset {
+public class Dataset extends RandomAccessDataset {
     private List<Row> rows;
 
-    private MyDataset(BaseBuilder<?> builder, List<Row> rows) {
+    private Dataset(BaseBuilder<?> builder, List<Row> rows) {
         super(builder);
         this.rows = rows;
     }
@@ -53,8 +53,8 @@ public class MyDataset extends RandomAccessDataset {
             return this;
         }
 
-        public MyDataset build(List<Row> rows) {
-            return new MyDataset(this, rows);
+        public Dataset build(List<Row> rows) {
+            return new Dataset(this, rows);
         }
     }
 }

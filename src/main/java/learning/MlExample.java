@@ -2,7 +2,7 @@ package learning;
 
 import ai.djl.training.TrainingResult;
 import generation.Experiment;
-import learning.dataset.MyDataset;
+import learning.dataset.Dataset;
 import learning.dataset.Row;
 import model.Trace;
 
@@ -30,7 +30,7 @@ public class MlExample {
         });
 
         System.out.println("Phase 1");
-        MyDataset trainDataset = new MyDataset.Builder()
+        Dataset trainDataset = new Dataset.Builder()
                 .setSampling(16, true)
                 .build(rows);
 
