@@ -22,14 +22,9 @@ public class MyDataset extends RandomAccessDataset {
 
     @Override
     protected Record get(NDManager ndManager, long l) throws IOException {
-        Float[] record = rows.get((int)l).getData();
-        float[] recordf = new float[record.length];
-        for (int i=0; i<record.length; ++i) {
-            recordf[i] = record[i];
-        }
-        NDArray datum = ndManager.create(recordf);
+        float[] record = rows.get((int)l).getData();
+        NDArray datum = ndManager.create(record);
         NDArray label = ndManager.create(rows.get((int)l).getLabel());
-
         return new Record(new NDList(datum), new NDList(label));
     }
 
@@ -39,7 +34,7 @@ public class MyDataset extends RandomAccessDataset {
     }
 
     public int getRowSize() {
-        return this.rows.size();
+        return this.rows.get(0).getData().length;
     }
 
     public int getNumClasses() {

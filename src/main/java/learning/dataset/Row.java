@@ -14,43 +14,35 @@ import java.util.stream.Collectors;
 public class Row {
     private User user;
     private List<Trace> traces;
-    //private int label;
+    private int label;
 
-    public Float[] getData() {
+    public float[] getData() {
         float userType = user.getUserType().ordinal();
         float userGender = user.getUserGender().ordinal();
         float userAge = user.getUserAge();
-        List<Float> x = traces.stream()
-                .map(Trace::getPointOfInterest)
-                .map(POI::getGeolocalization)
-                .mapToDouble(Geolocalization::getLatitude)
-                .boxed()
-                .map(Float::new)
-                .collect(Collectors.toList());
-        List<Float> y = traces.stream()
-                .map(Trace::getPointOfInterest)
-                .map(POI::getGeolocalization)
-                .mapToDouble(Geolocalization::getLongitude)
-                .boxed()
-                .map(Float::new)
-                .collect(Collectors.toList());
+        List<Float> xy = new LinkedList<>();
+
+        Geolocalization geolocalization;
+        for (int i=0; i<traces.size()*2; i=i+2) {
+            geolocalization = traces.get(i).getPointOfInterest().getGeolocalization();
+            xy.add((float)geolocalization.getLatitude());
+            xy.add((float)geolocalization.getLongitude());
+        }
 
         List<Float> values = new LinkedList<>();
         values.add(userAge);
         values.add(userType);
         values.add(userGender);
-        values.addAll(x);
-        values.addAll(y);
+        values.addAll(xy);
 
-        //float[] xx = (float)x;
-        //do dokonczenia
-
-        Float[] table = values.toArray(Float[]::new);
-        return table;
+        float[] row = new float[values.size()];
+        for (int i=0; i<values.size(); ++i) {
+            row[i] = values.get(i);
+        }
+        return row;
     }
 
     public int getLabel() {
-        return (int)Math.round(Math.random() * 2);
-        //return label;
+        return label;
     }
 }
