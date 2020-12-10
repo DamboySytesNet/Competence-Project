@@ -2,13 +2,11 @@ package learning.dataset;
 
 import lombok.AllArgsConstructor;
 import model.Geolocalization;
-import model.POI;
 import model.Trace;
 import model.User;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class Row {
