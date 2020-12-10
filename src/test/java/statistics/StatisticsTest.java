@@ -4,10 +4,12 @@ import generation.GeneratorConsts;
 import generation.POIFactory;
 import generation.TraceGenerator;
 import generation.UserFactory;
+import model.Geolocalization;
 import model.POI;
 import model.Trace;
 import model.User;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
@@ -43,6 +45,8 @@ public class StatisticsTest {
 
         LocalDateTime currentTime = startTime;
         TraceGenerator traceGenerator = new TraceGenerator(users, pointsOfInterest, currentTime);
+
+        System.out.println(users);
 
         for (int i = 0; i < 60; i++) {
             traces.addAll(traceGenerator.generateTraces(currentTime));
