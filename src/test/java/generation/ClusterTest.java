@@ -1,6 +1,6 @@
 package generation;
 
-import cluster.POICluster;
+import cluster.Cluster;
 import cluster.clusterable.POIWrapper;
 import model.POI;
 import org.apache.commons.math3.ml.clustering.CentroidCluster;
@@ -23,13 +23,13 @@ public class ClusterTest {
     public void KMeanPOIForVarious() {
         //given:
         int clusters = 3;
-        POICluster poiCluster = new POICluster(clusters, 75);
+        Cluster<POI, POIWrapper> poiCluster = new Cluster<>(clusters, 75);
 
         for (int i = 0; i < 100; i++) {
             //when:
             Collections.shuffle(pois);
             List<POI> reducedPois = pois.subList(0, new Random().nextInt(pois.size() - clusters) + clusters);
-            List<CentroidCluster<POIWrapper>> poisWrapper = poiCluster.KMeanPOI(reducedPois);
+            List<CentroidCluster<POIWrapper>> poisWrapper = poiCluster.KMean(reducedPois, POIWrapper::new);
 
             //then:
             Assert.assertEquals(clusters, poisWrapper.size());
@@ -46,11 +46,11 @@ public class ClusterTest {
     public void KMeanPOI() {
         //given:
         int clusters = 10;
-        POICluster poiCluster = new POICluster(clusters, 75);
+        Cluster<POI, POIWrapper> cluster = new Cluster<>(clusters, 75);
 
         //then:
         Assert.assertTrue(pois.size() < clusters);
-        poiCluster.KMeanPOI(pois);
+        cluster.KMean(pois, POIWrapper::new);
     }
 }
 
