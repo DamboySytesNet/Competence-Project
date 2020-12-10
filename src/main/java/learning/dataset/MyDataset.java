@@ -39,7 +39,7 @@ public class MyDataset extends RandomAccessDataset {
     }
 
     public int getRowSize() {
-        return this.rows.size();
+        return this.rows.get(0).getData().length;
     }
 
     public int getNumClasses() {
