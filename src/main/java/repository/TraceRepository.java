@@ -8,7 +8,9 @@ import model.TraceData;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -87,6 +89,10 @@ public class TraceRepository {
 
         ResultSet rs = session.execute(sb.toString());
         return mapRowToTraceData(rs.one());
+    }
+
+    public TraceData getTraceByOffset(long offset) {
+        return getTraces(offset, 1).get(0);
     }
 
     public List<TraceData> getTraces(long offset, long limit) {

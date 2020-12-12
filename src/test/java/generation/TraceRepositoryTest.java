@@ -16,7 +16,7 @@ public class TraceRepositoryTest {
     @Test
     public void test() {
         CassandraConnector connector = new CassandraConnector();
-        connector.connect("127.0.0.1", 9042);
+        connector.connect();
 
         String keyspaceName = "competence_project";
 
@@ -55,6 +55,8 @@ public class TraceRepositoryTest {
         traceRepository.deleteTraces(Collections.singletonList(traceData.getId()));
 
         Assert.assertEquals(totalTraces, traceRepository.getTotalNumberOfTraces());
+
+        connector.close();
     }
 
 }

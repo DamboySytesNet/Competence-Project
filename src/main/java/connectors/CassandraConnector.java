@@ -6,14 +6,14 @@ import com.datastax.driver.core.Session;
 public class CassandraConnector {
 
     private Cluster cluster;
-
     private Session session;
 
-    public void connect(String node, Integer port) {
-        Cluster.Builder b = Cluster.builder().addContactPoint(node);
-        if (port != null) {
-            b.withPort(port);
-        }
+    private static final String NODE = "127.0.0.1";
+    private static final Integer PORT = 9042;
+
+    public void connect() {
+        Cluster.Builder b = Cluster.builder().addContactPoint(NODE);
+        b.withPort(PORT);
         cluster = b.build();
 
         session = cluster.connect();
