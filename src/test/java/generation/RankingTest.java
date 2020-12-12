@@ -28,11 +28,11 @@ public class RankingTest {
         this.pois = new LinkedList<>();
          this.traces = new LinkedList<>();
          //gen Users
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 50; i++) {
             this.users.add(UserFactory.getInstance().generate());
         }
         //gen Pois
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 200; i++) {
             this.pois.add(POIFactory.getInstance().generate());
         }
 

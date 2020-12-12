@@ -1,12 +1,18 @@
 package ranking;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import model.POI;
 import model.Trace;
 
 import java.time.Duration;
-import java.util.*;
+
+import java.util.List;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Collections;
+import java.util.Map;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 import static java.util.Map.Entry.comparingByValue;
 import static java.util.stream.Collectors.toMap;

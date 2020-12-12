@@ -29,7 +29,11 @@ public class UserFactory {
         return instance;
     }
 
-    public User generate(){
+    public User generate() {
+        return generate("");
+    }
+
+    public User generate(String experimentId) {
         int userAge;
         UUID userID = UUID.randomUUID();
         String phoneNumber = "";
@@ -46,6 +50,7 @@ public class UserFactory {
                 .userAge(userAge)
                 .userType(userType)
                 .userGender(userGender)
+                .experimentId(experimentId)
                 .build();
     }
 
