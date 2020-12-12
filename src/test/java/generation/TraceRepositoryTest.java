@@ -8,6 +8,7 @@ import repository.KeyspaceRepository;
 import repository.TraceRepository;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
 
@@ -44,11 +45,8 @@ public class TraceRepositoryTest {
 
         TraceData savedData = traceRepository.getTraceById(traceData.getId());
 
-        Assert.assertEquals(traceData.getId(), savedData.getId());
-        Assert.assertEquals(traceData.getUserId(), savedData.getUserId());
-        Assert.assertEquals(traceData.getPointOfInterestId(), savedData.getPointOfInterestId());
-        Assert.assertEquals(traceData.getEntryTime().toString().substring(0, 23), savedData.getEntryTime().toString());
-        Assert.assertEquals(traceData.getExitTime().toString().substring(0, 23), savedData.getExitTime().toString());
+        assertTracesEquals(traceData, savedData);
+        Assert.assertNull(traceData.getPreviousTraceId());
 
         Assert.assertEquals(totalTraces + 1, traceRepository.getTotalNumberOfTraces());
 
@@ -56,7 +54,57 @@ public class TraceRepositoryTest {
 
         Assert.assertEquals(totalTraces, traceRepository.getTotalNumberOfTraces());
 
+        TraceData secondTraceData = TraceData.builder()
+                .id(UUID.randomUUID())
+                .userId(UUID.randomUUID())
+                .pointOfInterestId(UUID.randomUUID())
+                .entryTime(LocalDateTime.now())
+                .exitTime(LocalDateTime.now())
+                .pointOfInterestId(traceData.getId())
+                .build();
+        traceRepository.insertTrace(secondTraceData);
+
+        TraceData savedSecondData = traceRepository.getTraceById(secondTraceData.getId());
+
+        Assert.assertEquals(secondTraceData.getPreviousTraceId(), savedSecondData.getPreviousTraceId());
+
+        TraceData thirdTraceData = TraceData.builder()
+                .id(UUID.randomUUID())
+                .userId(UUID.randomUUID())
+                .pointOfInterestId(UUID.randomUUID())
+                .entryTime(LocalDateTime.now())
+                .exitTime(LocalDateTime.now())
+                .pointOfInterestId(secondTraceData.getId())
+                .build();
+
+        TraceData fourthTraceData = TraceData.builder()
+                .id(UUID.randomUUID())
+                .userId(UUID.randomUUID())
+                .pointOfInterestId(UUID.randomUUID())
+                .entryTime(LocalDateTime.now())
+                .exitTime(LocalDateTime.now())
+                .pointOfInterestId(thirdTraceData.getId())
+                .build();
+
+        traceRepository.insertTraces(Arrays.asList(thirdTraceData, fourthTraceData));
+
+        TraceData savedThirdData = traceRepository.getTraceById(thirdTraceData.getId());
+
+        assertTracesEquals(thirdTraceData, savedThirdData);
+
+        TraceData savedFourthData = traceRepository.getTraceById(fourthTraceData.getId());
+
+        assertTracesEquals(fourthTraceData, savedFourthData);
+
         connector.close();
+    }
+
+    void assertTracesEquals(TraceData t1, TraceData t2) {
+        Assert.assertEquals(t1.getId(), t2.getId());
+        Assert.assertEquals(t1.getUserId(), t2.getUserId());
+        Assert.assertEquals(t1.getPointOfInterestId(), t2.getPointOfInterestId());
+        Assert.assertEquals(t1.getEntryTime().toString().substring(0, 23), t2.getEntryTime().toString());
+        Assert.assertEquals(t1.getExitTime().toString().substring(0, 23), t2.getExitTime().toString());
     }
 
 }

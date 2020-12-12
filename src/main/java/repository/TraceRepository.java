@@ -34,6 +34,7 @@ public class TraceRepository {
                 .append("entry_time timestamp,")
                 .append("exit_time timestamp,")
                 .append("creation_time timestamp,")
+                .append("previous_trace_id uuid,")
                 .append("PRIMARY KEY (id));");
         session.execute(sb.toString());
     }
@@ -50,7 +51,7 @@ public class TraceRepository {
 
         StringBuilder sb = new StringBuilder("INSERT INTO ")
                 .append(TABLE_NAME)
-                .append("(id, user_id, point_of_interest_id, entry_time, exit_time) ")
+                .append("(id, user_id, point_of_interest_id, entry_time, exit_time, previous_trace_id) ")
                 .append("VALUES (")
                 .append(traceData.getId().toString())
                 .append(", ")
@@ -61,7 +62,37 @@ public class TraceRepository {
                 .append(traceData.getEntryTime().toInstant(offset).toEpochMilli())
                 .append(", ")
                 .append(traceData.getExitTime().toInstant(offset).toEpochMilli())
+                .append(", ")
+                .append(traceData.getPreviousTraceId() == null ? "null" : traceData.getPreviousTraceId().toString())
                 .append(");");
+
+        session.execute(sb.toString());
+    }
+
+    public void insertTraces(List<TraceData> traceDataList) {
+        ZoneOffset offset = ZoneOffset.systemDefault().getRules().getOffset(LocalDateTime.now());
+
+        StringBuilder sb = new StringBuilder("BEGIN BATCH");
+
+        for (TraceData traceData: traceDataList) {
+            sb.append(" INSERT INTO ")
+                    .append(TABLE_NAME)
+                    .append("(id, user_id, point_of_interest_id, entry_time, exit_time, previous_trace_id) ")
+                    .append("VALUES (")
+                    .append(traceData.getId().toString())
+                    .append(", ")
+                    .append(traceData.getUserId().toString())
+                    .append(", ")
+                    .append(traceData.getPointOfInterestId().toString())
+                    .append(", ")
+                    .append(traceData.getEntryTime().toInstant(offset).toEpochMilli())
+                    .append(", ")
+                    .append(traceData.getExitTime().toInstant(offset).toEpochMilli())
+                    .append(", ")
+                    .append(traceData.getPreviousTraceId() == null ? "null" : traceData.getPreviousTraceId().toString())
+                    .append(");");
+        }
+        sb.append(" APPLY BATCH;");
 
         session.execute(sb.toString());
     }
@@ -132,6 +163,7 @@ public class TraceRepository {
                 .exitTime(r.getTimestamp("exit_time").toInstant()
                         .atZone(ZoneId.systemDefault())
                         .toLocalDateTime())
+                .previousTraceId(r.getUUID("previous_trace_id"))
                 .build();
     }
 }
