@@ -58,8 +58,8 @@ public class StatisticsTest {
 
         for (Trace trace : traces) {
             System.out.println("User: " + trace.getUser().getUserID()
-                    + ", time in POI " + trace.getPointOfInterest().getId()
-                    + ", (min): " + ChronoUnit.SECONDS.between(trace.getEntryTime(), trace.getExitTime()) / 60.0);
+                + ", time in POI " + trace.getPointOfInterest().getId()
+                + ", (min): " + ChronoUnit.SECONDS.between(trace.getEntryTime(), trace.getExitTime()) / 60.0);
         }
 
     }
@@ -75,10 +75,10 @@ public class StatisticsTest {
             uniqueIdList.add(traces.get(0).getPointOfInterest().getId());
             for (int i = 1; i < traces.size(); i++) {
                 if (!uniqueIdList.contains(traces.get(i).getPointOfInterest().getId())
-                        && traces.get(i).getUser().getUserID().equals(user.getUserID())) {
+                    && traces.get(i).getUser().getUserID().equals(user.getUserID())) {
                     uniqueIdList.add(traces.get(i).getPointOfInterest().getId());
                     route += traces.get(i - 1).getPointOfInterest().getGeolocalization()
-                            .getDistance(traces.get(i).getPointOfInterest().getGeolocalization());
+                        .getDistance(traces.get(i).getPointOfInterest().getGeolocalization());
                 }
 
             }
