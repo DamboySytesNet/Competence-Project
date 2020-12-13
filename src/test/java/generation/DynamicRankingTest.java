@@ -121,42 +121,5 @@ public class DynamicRankingTest {
                 Assert.assertTrue(tableToTest[i] >= tableToTest[i+1]);
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-//        tableToTest =  ranking.getVisitorsCountRanking().values().toArray(tableToTest);
-//        for(int i = 0 ; i < tableToTest.length - 1  ; i++){
-//            Assert.assertTrue(tableToTest[i] <= tableToTest[i+1]);
-//        }
-//
-//
-//
-//
-//
-//        //visitorsDESC
-//        tableToTest =  visitorsRankingDesc.values().toArray(tableToTest);
-//        for(int i = 0 ; i < tableToTest.length - 1  ; i++){
-//            Assert.assertTrue(tableToTest[i] >= tableToTest[i+1]);
-//        }
-//
-//        //timespentASC
-//        tableToTest =  timeRankingAsc.values().toArray(tableToTest);
-//        for(int i = 0 ; i < tableToTest.length - 1 ; i++){
-//            Assert.assertTrue(tableToTest[i] <= tableToTest[i+1]);
-//        }
-//
-//        //timespentDESC
-//        tableToTest =  timeRankingDesc.values().toArray(tableToTest);
-//        for(int i = 0 ; i < tableToTest.length - 1 ; i++){
-//            Assert.assertTrue(tableToTest[i] >= tableToTest[i+1]);
-//        }
     }
 }
