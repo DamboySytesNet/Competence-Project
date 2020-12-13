@@ -16,53 +16,19 @@ import java.util.List;
 
 public class DynamicRankingTest {
 
-    private List<List<Trace>> traces;
-
     private POIDynamicRanking ranking;
 
-    public List<Trace> generateTraces(int usersSize, int poisSize, int tracesSize, int timeStep){
-
-        List<User> users = new LinkedList<>();
-        List<POI> pois = new LinkedList<>();
-        List<Trace> traces = new LinkedList<>();
-        LocalDateTime time = LocalDateTime.now();;
-        TraceGenerator traceGenerator;
-        //gen Users
-        for (int i = 0; i < usersSize; i++) {
-            users.add(UserFactory.getInstance().generate());
-        }
-        //gen Pois
-        for (int i = 0; i < poisSize; i++) {
-            pois.add(POIFactory.getInstance().generate());
-        }
-
-        traceGenerator = new TraceGenerator(users, pois, time);
-        LocalDateTime currentTime = time;
-        //gen Traces
-        do {
-            currentTime = currentTime.plusMinutes(timeStep);
-            traces.addAll(traceGenerator.generateTraces(currentTime));
-        } while (traces.size() < tracesSize);
-
-        return traces;
-    }
-
-
+    private List<Experiment> experimentList;
 
     @Before
     public void setUp() throws Exception {
         this.ranking = new POIDynamicRanking();
-        this.traces = new LinkedList<>();
-        this.traces.add(generateTraces(134,220,12412, 3 ));
-        this.traces.add(generateTraces(14124,124160,14124, 3 ));
-        this.traces.add(generateTraces(14124,42460,442340, 3 ));
-        this.traces.add(generateTraces(445640,75660,5677, 3 ));
-        this.traces.add(generateTraces(423530,6634560,353440, 3 ));
 
+        this.experimentList = new LinkedList<>();
 
-
-
-
+        this.experimentList.add(new Experiment(14124,124160,14124, 3 ));
+        this.experimentList.add(new Experiment(445640,75660,5677, 3 ));
+        this.experimentList.add(new Experiment(423530,6634560,353440, 3 ));
     }
 
     @Test
@@ -71,8 +37,8 @@ public class DynamicRankingTest {
         Integer[] tableToTest;
 
         //VISITORS ASC
-        for(List<Trace> tracesList : this.traces){
-            ranking.updateVisitorsCountRanking(tracesList, false);
+        for(Experiment experiment : this.experimentList){
+            ranking.updateVisitorsCountRanking(experiment.getTraces(), false);
 
             tableToTest = new Integer[ranking.getVisitorsCountRanking().values().size()];
 
@@ -84,8 +50,8 @@ public class DynamicRankingTest {
         }
 
         //VISITORS DESC
-        for(List<Trace> tracesList : this.traces){
-            ranking.updateVisitorsCountRanking(tracesList, true);
+        for(Experiment experiment : this.experimentList){
+            ranking.updateVisitorsCountRanking(experiment.getTraces(), true);
 
             tableToTest = new Integer[ranking.getVisitorsCountRanking().values().size()];
 
@@ -97,8 +63,8 @@ public class DynamicRankingTest {
         }
 
         //TIME ASC
-        for(List<Trace> tracesList : this.traces){
-            ranking.updateTimeSpentRanking(tracesList, false);
+        for(Experiment experiment : this.experimentList){
+            ranking.updateTimeSpentRanking(experiment.getTraces(), false);
 
             tableToTest = new Integer[ranking.getTimeSpentRanking().values().size()];
 
@@ -110,8 +76,8 @@ public class DynamicRankingTest {
         }
 
         //TIME DESC
-        for(List<Trace> tracesList : this.traces){
-            ranking.updateTimeSpentRanking(tracesList, true);
+        for(Experiment experiment : this.experimentList){
+            ranking.updateTimeSpentRanking(experiment.getTraces(), true);
 
             tableToTest = new Integer[ranking.getTimeSpentRanking().values().size()];
 
