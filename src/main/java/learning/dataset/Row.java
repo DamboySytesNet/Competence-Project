@@ -21,8 +21,8 @@ public class Row {
         List<Float> xy = new LinkedList<>();
 
         Geolocalization geolocalization;
-        for (int i=0; i<traces.size()*2; i=i+2) {
-            geolocalization = traces.get(i).getPointOfInterest().getGeolocalization();
+        for (Trace trace : traces) {
+            geolocalization = trace.getPointOfInterest().getGeolocalization();
             xy.add((float)geolocalization.getLatitude());
             xy.add((float)geolocalization.getLongitude());
         }
