@@ -42,10 +42,12 @@ public class JavaDatabaseConnectorTest {
         //given:
         String query = "SELECT * FROM `competence-schema`.`persons`";
         UserRepository userRepository = new UserRepository();
-        User stUser = new User(UUID.randomUUID(), "111222333",
-                21, UserType.student, UserGender.female, "1");
-        User ndUser = new User(UUID.fromString("e734b220-dffb-4e86-9ed3-e384afef233a"), "111222456",
-                48, UserType.teacher, UserGender.helikopter_szturmowy, "1");
+        User stUser = User.builder().userAge(21).userGender(UserGender.female)
+                .userID(UUID.randomUUID()).userType(UserType.student).experimentId("1")
+                .phoneNumber("111222333").build();
+        User ndUser = User.builder().userAge(48).userGender(UserGender.helikopter_szturmowy)
+                .userID(UUID.randomUUID()).userType(UserType.teacher).experimentId("1")
+                .phoneNumber("111222456").build();
 
         //when:
         boolean stAdded = userRepository.save(stUser);
@@ -60,7 +62,7 @@ public class JavaDatabaseConnectorTest {
         List<User> users = userRepository.getAll();
 
         boolean deleted = userRepository.delete(stUser.getUserID());
-        boolean deleted2 = userRepository.delete(UUID.fromString("e734b220-dffb-4e86-9ed3-e384afef233a"));
+        boolean deleted2 = userRepository.delete(ndUser.getUserID());
 
         //then:
         Assert.assertTrue(stAdded);
