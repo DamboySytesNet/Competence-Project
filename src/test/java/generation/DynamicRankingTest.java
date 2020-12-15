@@ -26,9 +26,9 @@ public class DynamicRankingTest {
 
         this.experimentList = new LinkedList<>();
 
-        this.experimentList.add(new Experiment(14124,124160,14124, 3 ));
-        this.experimentList.add(new Experiment(445640,75660,5677, 3 ));
-        this.experimentList.add(new Experiment(423530,6634560,353440, 3 ));
+        this.experimentList.add(new Experiment(1412,1240,1412, 3 ));
+        this.experimentList.add(new Experiment(4456,7566,5677, 3 ));
+        this.experimentList.add(new Experiment(4235,6634,3534, 3 ));
     }
 
     @Test
