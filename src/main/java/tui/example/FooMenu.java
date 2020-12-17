@@ -5,10 +5,12 @@ import tui.Menu;
 import java.util.Scanner;
 
 public class FooMenu implements Menu {
-    private Menu parent;
+    private final Menu parent;
+    private final Scanner scanner;
     private static int stylePoints;
 
-    public FooMenu(Menu parent) {
+    public FooMenu(Menu parent, Scanner scanner) {
+        this.scanner = scanner;
         this.parent = parent;
     }
 
@@ -18,9 +20,7 @@ public class FooMenu implements Menu {
         System.out.println("[stream] - Use stream and be extra rewarded");
         System.out.println("\nWrite anything else to continue...");
 
-        Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
-
         switch (input) {
             case "stream": {
                 usedStream();

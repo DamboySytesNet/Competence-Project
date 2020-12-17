@@ -8,12 +8,13 @@ import java.util.Map;
 import java.util.Scanner;
 
 
-
 public class MainMenu implements Menu {
+    private final Scanner scanner;
     private final FooMenu exampleSubmenu;
 
-    public MainMenu() {
-        this.exampleSubmenu = new FooMenu(this);
+    public MainMenu(Scanner scanner) {
+        this.scanner = scanner;
+        this.exampleSubmenu = new FooMenu(this, scanner);
     }
 
     @Override
@@ -23,14 +24,10 @@ public class MainMenu implements Menu {
         System.out.println("[3] - Ranking");
         System.out.println("[4] - Clustering");
         System.out.println("[5] - Neural network");
-        System.out.println("[6] - FooExample");
         System.out.println("[9] - Options");
         System.out.println("[0] - Exit");
 
-        Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
-
-
         switch (Choose.getChoose(input)) {
             case generateAndSave:
             case statistics:
