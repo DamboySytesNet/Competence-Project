@@ -1,30 +1,35 @@
 package tui.example;
 
-import tui.MainMenu;
 import tui.Menu;
 
+import java.util.Scanner;
+
 public class FooMenu implements Menu {
+    private Menu parent;
     private static int stylePoints;
 
-    @Override
-    public void atStart() {
-        System.out.println("Hello in my Foo world");
-        System.out.println("[stream] - Use stream and be extra rewarded");
-        System.out.println("\nWrite anything else to continue...");
+    public FooMenu(Menu parent) {
+        this.parent = parent;
     }
 
     @Override
-    public Menu chooseNext(String input) {
-        // some processing
-        process();
+    public void execute() {
+        System.out.println("Hello in my Foo world");
+        System.out.println("[stream] - Use stream and be extra rewarded");
+        System.out.println("\nWrite anything else to continue...");
+
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.nextLine();
 
         switch (input) {
             case "stream": {
                 usedStream();
-                return this;
+                execute();
             }
-            case "exit": return null;
-            default: return new MainMenu(null);
+            case "exit":
+                System.exit(0);
+            default:
+                parent.execute();
         }
     }
 
@@ -32,13 +37,5 @@ public class FooMenu implements Menu {
         System.out.println("Thank you for using stream!");
         System.out.println("Here is your style point");
         System.out.println("Current number of style points: " + ++stylePoints);
-    }
-
-    public void process() {
-        System.out.println("Started processing");
-        System.out.println("Processing.");
-        System.out.println("Processing..");
-        System.out.println("Processing...");
-        System.out.println("Success!");
     }
 }
