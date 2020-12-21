@@ -1,6 +1,10 @@
+import tui.MainMenu;
+
+import java.util.Scanner;
 
 public class App {
     public static void main(String[] args) {
-        System.out.println("Hello world");
+        MainMenu menu = new MainMenu(new Scanner(System.in));
+        menu.execute();
     }
 }
