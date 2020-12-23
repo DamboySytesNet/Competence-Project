@@ -2,6 +2,7 @@ package statistics;
 
 import javafx.util.Pair;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import model.POI;
 import model.Trace;
 import model.User;
@@ -9,12 +10,13 @@ import model.User;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+@Getter
 public class Statistics {
     private final Map<User, Map<POI, Double>> lengthOfStayPerUserPerPOI = new HashMap<>();
     private final Map<User, Pair<Trace, Double>> longestRoutePerUser = new HashMap<>();
     private final List<POIPopularity> poiPopularityList = new LinkedList<>();
 
-    public String getLengthOfStay(User user, POI poi) {
+    public String getLengthOfStayText(User user, POI poi) {
         StringBuilder sb = new StringBuilder("I (" + user.getUserID() + ") have no route");
 
         if (lengthOfStayPerUserPerPOI.containsKey(user)) {
@@ -28,7 +30,18 @@ public class Statistics {
         return sb.toString();
     }
 
-    public String getLongestRoute(User user) {
+    public double getLengthOfStay(User user, POI poi) {
+        if (lengthOfStayPerUserPerPOI.containsKey(user)) {
+            Map<POI, Double> POIStayLength = lengthOfStayPerUserPerPOI.get(user);
+            if (POIStayLength.containsKey(poi)) {
+                return POIStayLength.get(poi);
+            }
+        }
+
+        return 0.0;
+    }
+
+    public String getLongestRouteText(User user) {
         StringBuilder sb = new StringBuilder("I (" + user.getUserID() + ") have no route");
 
         if (longestRoutePerUser.containsKey(user)) {
@@ -42,7 +55,15 @@ public class Statistics {
         return sb.toString();
     }
 
-    public String getMostPopularPOI(POI searchedPOI) {
+    public double getLongestRoute(User user) {
+        if (longestRoutePerUser.containsKey(user)) {
+            return longestRoutePerUser.get(user).getValue();
+        }
+
+        return 0.0;
+    }
+
+    public String getMostPopularPOIText(POI searchedPOI) {
         StringBuilder sb = new StringBuilder("I did not visit anything from POI " + searchedPOI.getId());
 
         for (POIPopularity poiPopularity : poiPopularityList) {
@@ -65,6 +86,25 @@ public class Statistics {
         return sb.toString();
     }
 
+    public List<POI> getMostPopularPOI(POI searchedPOI) {
+        List<POI> popularPOIs = new LinkedList<>();
+
+        for (POIPopularity poiPopularity : poiPopularityList) {
+            if (poiPopularity.oldPOI.getId() == searchedPOI.getId()) {
+                int max = poiPopularity.getMaxVisits();
+                for (POI poi : poiPopularity.popularityCounter.keySet()) {
+                    if (poiPopularity.popularityCounter.get(poi) == max) {
+                        popularPOIs.add(poi);
+                    }
+                }
+
+                break;
+            }
+        }
+
+        return popularPOIs;
+    }
+
     /**
      * Adds trace to statistics
      *
@@ -82,18 +122,16 @@ public class Statistics {
      * @param trace new trace to be added
      */
     private void calculateLengthOfStay(Trace trace) {
-        lengthOfStayPerUserPerPOI.computeIfAbsent(
+        // Get user's POIs
+        Map<POI, Double> lengthOfStayPerPOI = lengthOfStayPerUserPerPOI.computeIfAbsent(
             trace.getUser(),
             k -> new HashMap<>()
         );
 
-        // Get user's POIs
-        Map<POI, Double> lengthOfStayPerPOI = lengthOfStayPerUserPerPOI.get(trace.getUser());
-
         // Calculate length of stay in trace [min]
-        double minutes = ChronoUnit.SECONDS.between(
+        double minutes = ChronoUnit.MINUTES.between(
             trace.getEntryTime(),
-            trace.getExitTime()) / 60.0;
+            trace.getExitTime());
 
         // Add length of stay to existing key or
         // add new key with length of stay
@@ -122,14 +160,12 @@ public class Statistics {
      * @param trace new trace to be added
      */
     private void calculateLongestRoute(Trace trace) {
-        Pair<Trace, Double> longestRoute;
         double newDistance = 0.0;
 
         // Get (oldTrace, longestRoute) pair if exists or
         // create new one
-        if (longestRoutePerUser.containsKey(trace.getUser())) {
-            longestRoute = longestRoutePerUser.get(trace.getUser());
-        } else {
+        Pair<Trace, Double> longestRoute = longestRoutePerUser.get(trace.getUser());
+        if (longestRoute == null) {
             longestRoute = new Pair<>(null, newDistance);
         }
 
@@ -141,13 +177,9 @@ public class Statistics {
         }
 
         // Create pair with new trace and currently longest route
-        Pair<Trace, Double> newLongestRoute;
         double oldDistance = longestRoute.getValue();
-        if (newDistance > oldDistance) {
-            newLongestRoute = new Pair<>(trace, newDistance);
-        } else {
-            newLongestRoute = new Pair<>(trace, oldDistance);
-        }
+        double distance = newDistance > oldDistance ? newDistance : oldDistance;
+        Pair<Trace, Double> newLongestRoute = new Pair<>(trace, distance);
 
         // Update statistics
         longestRoutePerUser.put(trace.getUser(), newLongestRoute);
@@ -173,8 +205,9 @@ public class Statistics {
                 // If dest POI already exists, increase counter, or else
                 // set counter to 1
                 int counter = 1;
-                if (poiPopularity.popularityCounter.containsKey(trace.getPointOfInterest())) {
-                    counter = poiPopularity.popularityCounter.get(trace.getPointOfInterest()) + 1;
+                Integer newCounter = poiPopularity.popularityCounter.get(trace.getPointOfInterest());
+                if (newCounter != null) {
+                    counter = newCounter + 1;
                 }
 
                 // Update counter

@@ -72,7 +72,7 @@ public class StatisticsTest {
         }
         System.out.println();
 
-        System.out.println(stats.getLengthOfStay(users.get(0), pointsOfInterest.get(0)));
+        System.out.println(stats.getLengthOfStayText(users.get(0), pointsOfInterest.get(0)));
         System.out.println();
 
         Assert.assertTrue(true);
@@ -87,7 +87,7 @@ public class StatisticsTest {
         }
         System.out.println();
 
-        System.out.println(stats.getLongestRoute(users.get(0)));
+        System.out.println(stats.getLongestRouteText(users.get(0)));
         System.out.println();
 
         Assert.assertTrue(true);
@@ -106,11 +106,11 @@ public class StatisticsTest {
         }
         System.out.println();
 
-        System.out.println(stats.getMostPopularPOI(pointsOfInterest.get(0)));
+        System.out.println(stats.getMostPopularPOIText(pointsOfInterest.get(0)));
         System.out.println();
-        System.out.println(stats.getMostPopularPOI(pointsOfInterest.get(1)));
+        System.out.println(stats.getMostPopularPOIText(pointsOfInterest.get(1)));
         System.out.println();
-        System.out.println(stats.getMostPopularPOI(pointsOfInterest.get(2)));
+        System.out.println(stats.getMostPopularPOIText(pointsOfInterest.get(2)));
 
         Assert.assertTrue(true);
     }
