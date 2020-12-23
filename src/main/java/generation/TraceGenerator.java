@@ -62,8 +62,7 @@ public class TraceGenerator {
     }
 
     private long calcTimeStep(LocalDateTime currentTime) {
-        long minutesDifference = ChronoUnit.MINUTES.between(this.lastStepTime, currentTime);
-        return minutesDifference;
+        return ChronoUnit.MINUTES.between(this.lastStepTime, currentTime);
     }
 
     public List<Trace> generateTraces(LocalDateTime time) {

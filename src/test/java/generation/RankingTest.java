@@ -1,12 +1,12 @@
 package generation;
 
-import ranking.POIRanking;
 import model.POI;
 import model.Trace;
 import model.User;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import ranking.POIRanking;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;

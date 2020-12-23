@@ -5,13 +5,11 @@ import model.Trace;
 
 import java.time.Duration;
 
-
 import java.util.List;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Collections;
 import java.util.Map;
-
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
