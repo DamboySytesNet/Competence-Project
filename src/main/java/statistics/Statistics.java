@@ -234,6 +234,12 @@ public class Statistics {
         }
     }
 
+    public double getSumOfStayPerPOI(POI poi) {
+        return lengthOfStayPerUserPerPOI.values().stream().filter(poiDoubleMap -> poiDoubleMap.containsKey(poi))
+                .mapToDouble(poiDoubleMap -> poiDoubleMap.get(poi))
+                .sum();
+    }
+
     @AllArgsConstructor
     private static class POIPopularity {
         private final POI oldPOI;

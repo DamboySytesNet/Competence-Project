@@ -62,20 +62,6 @@ public class NewClusterTest {
         }
     }
 
-    @Test
-    public void testLongestRouteStatistics() {
-        System.out.println("\n--------------TRACES");
-        for (int i = 1; i < traces.size(); i++) {
-            System.out.println(traces.get(i).getPointOfInterest().getGeolocalization()
-                .getDistance(traces.get(i - 1).getPointOfInterest().getGeolocalization()));
-        }
-        System.out.println();
-
-        System.out.println(stats.getLongestRouteText(users.get(0)));
-        System.out.println();
-
-        Assert.assertTrue(true);
-    }
 
     @Test
     public void newTestClusterWithStats() {
@@ -84,6 +70,9 @@ public class NewClusterTest {
         Cluster<POI, POIWrapper> poiCluster = new Cluster<>(clusters, 75);
 
 
-        List<CentroidCluster<POIWrapper>> poisWrapper = poiCluster.KMean(pointsOfInterest, POIWrapper::new);
+        List<CentroidCluster<POIWrapper>> poisWrapper = poiCluster.KMean(pointsOfInterest, poi ->
+                new POIWrapper(poi, stats.getSumOfStayPerPOI(poi)));
+
+        int i = 1;
     }
 }
