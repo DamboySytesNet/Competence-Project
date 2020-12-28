@@ -156,6 +156,17 @@ public class POIRepository implements RepositorySaver<POI>{
         return isFinished;
     }
 
+    public static long getTotalNumberOfPOI() throws SQLException {
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(
+                "SELECT COUNT(*) AS total FROM `competence-schema`.`poi`");
+        ResultSet resultSet = statement.executeQuery();
+        resultSet.next();
+        long total = Long.parseLong(resultSet.getString("total"));
+        connection.close();
+        return total;
+    }
+
     private static POI mapResultSetToPOI(ResultSet resultSet) throws SQLException {
         return POI.builder()
                 .id(UUID.fromString(resultSet.getString("id")))

@@ -144,4 +144,16 @@ public class UserRepository implements RepositorySaver<User> {
         connection.close();
         return isFinished;
     }
+
+    public static long getTotalNumberOfUsers() throws SQLException {
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(
+                "SELECT COUNT(*) AS total FROM `competence-schema`.`persons`");
+        ResultSet resultSet = statement.executeQuery();
+        resultSet.next();
+        long total = Long.parseLong(resultSet.getString("total"));
+
+        connection.close();
+        return total;
+    }
 }
