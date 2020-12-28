@@ -1,15 +1,18 @@
 package generation;
 
+import repository.ExperimentRepository;
 import repository.POIRepository;
 import repository.RepositorySaver;
 import repository.UserRepository;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ExperimentSaver {
 
-    public static void saveExperimentResults(Experiment experiment) {
+    public static void saveExperimentResults(Experiment experiment) throws SQLException {
+        ExperimentRepository.save(experiment);
         saveObjectsByChunkingTo(experiment.getUsers(), new UserRepository());
         saveObjectsByChunkingTo(experiment.getPois(), new POIRepository());
     }

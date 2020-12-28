@@ -3,7 +3,6 @@ CREATE SCHEMA IF NOT EXISTS `competence-schema`;
 CREATE TABLE `competence-schema`.`experiments` (
   `id` VARCHAR(36) NOT NULL,
   `date` DATETIME NOT NULL,
-  `name` VARCHAR(32) NULL,
   PRIMARY KEY (`id`));
 
 CREATE TABLE `competence-schema`.`profiles` (
@@ -37,19 +36,5 @@ CREATE TABLE `competence-schema`.`poi` (
   `type` VARCHAR(16) NOT NULL,
   `experiment_id` VARCHAR(36) NOT NULL,
   FOREIGN KEY (`type`) REFERENCES `competence-schema`.`poi_types`(`name`),
-  FOREIGN KEY (`experiment_id`) REFERENCES `competence-schema`.`experiments`(`id`),
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `name_UNIQUE` (`name` ASC));
-
-
-CREATE TABLE `competence-schema`.`traces` (
-  `id` VARCHAR(36) NOT NULL,
-  `entry_date` DATETIME NOT NULL,
-  `exit_date` DATETIME NOT NULL,
-  `person_id` VARCHAR(36) NOT NULL,
-  `poi_id` VARCHAR(36) NOT NULL,
-  `experiment_id` VARCHAR(36) NOT NULL,
-  FOREIGN KEY (`person_id`) REFERENCES `competence-schema`.`persons`(`id`),
-  FOREIGN KEY (`poi_id`) REFERENCES `competence-schema`.`poi`(`id`),
   FOREIGN KEY (`experiment_id`) REFERENCES `competence-schema`.`experiments`(`id`),
   PRIMARY KEY (`id`));
