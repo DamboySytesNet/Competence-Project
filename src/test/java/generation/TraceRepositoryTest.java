@@ -7,9 +7,11 @@ import org.junit.Test;
 import repository.KeyspaceRepository;
 import repository.TraceRepository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 public class TraceRepositoryTest {
@@ -29,7 +31,6 @@ public class TraceRepositoryTest {
 
         keyspaceRepository.useKeyspace(keyspaceName);
         TraceRepository traceRepository = new TraceRepository(connector.getSession());
-
         traceRepository.createTable();
         TraceData traceData = TraceData.builder()
                 .id(UUID.randomUUID())
@@ -95,6 +96,62 @@ public class TraceRepositoryTest {
         TraceData savedFourthData = traceRepository.getTraceById(fourthTraceData.getId());
 
         assertTracesEquals(fourthTraceData, savedFourthData);
+
+        traceRepository.deleteTraces(Arrays.asList(secondTraceData.getId(), thirdTraceData.getId(), fourthTraceData.getId()));
+
+        connector.close();
+    }
+
+    @Test
+    public void shouldGetDailyTraces(){
+        CassandraConnector connector = new CassandraConnector();
+        connector.connect();
+
+        String keyspaceName = "competence_project";
+
+        KeyspaceRepository keyspaceRepository = new KeyspaceRepository(connector.getSession());
+        keyspaceRepository.createKeyspace(
+                keyspaceName,
+                "SimpleStrategy",
+                1);
+
+        keyspaceRepository.useKeyspace(keyspaceName);
+        TraceRepository traceRepository = new TraceRepository(connector.getSession());
+        traceRepository.createTable();
+
+        long totalTracesForToday = traceRepository.getTracesForToday().size();
+
+        TraceData traceYesterday = TraceData.builder()
+                .id(UUID.randomUUID())
+                .userId(UUID.randomUUID())
+                .pointOfInterestId(UUID.randomUUID())
+                .entryTime(LocalDateTime.now().minusDays(1))
+                .exitTime(LocalDateTime.now().minusDays(1))
+                .build();
+
+        TraceData traceToday = TraceData.builder()
+                .id(UUID.randomUUID())
+                .userId(UUID.randomUUID())
+                .pointOfInterestId(UUID.randomUUID())
+                .entryTime(LocalDateTime.now())
+                .exitTime(LocalDateTime.now())
+                .build();
+
+        TraceData traceTomorrow = TraceData.builder()
+                .id(UUID.randomUUID())
+                .userId(UUID.randomUUID())
+                .pointOfInterestId(UUID.randomUUID())
+                .entryTime(LocalDateTime.now().plusDays(1))
+                .exitTime(LocalDateTime.now().plusDays(1))
+                .build();
+
+        traceRepository.insertTraces(Arrays.asList(traceYesterday, traceToday, traceTomorrow));
+
+        List<TraceData> savedTracesToday = traceRepository.getTracesForToday();
+
+        Assert.assertEquals(totalTracesForToday + 1, savedTracesToday.size());
+
+        traceRepository.deleteTraces(Arrays.asList(traceYesterday.getId(), traceToday.getId(), traceTomorrow.getId()));
 
         connector.close();
     }
