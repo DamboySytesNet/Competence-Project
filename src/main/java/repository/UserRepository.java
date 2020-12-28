@@ -14,10 +14,9 @@ import java.util.UUID;
 
 import static connectors.JavaDatabaseConnector.getConnection;
 
-public class UserRepository {
+public class UserRepository implements RepositorySaver<User> {
 
-
-    public User getById(UUID id) throws SQLException {
+    public static User getById(UUID id) throws SQLException {
         Connection connection = getConnection();
         PreparedStatement statement = connection.prepareStatement("SELECT * FROM `competence-schema`.`persons` WHERE id=?");
         statement.setString(1, id.toString());
@@ -33,7 +32,7 @@ public class UserRepository {
         return user;
     }
 
-    public List<User> getAll() throws SQLException {
+    public static List<User> getAll() throws SQLException {
         Connection connection = getConnection();
         ResultSet resultSet = connection.createStatement().executeQuery("SELECT * FROM `competence-schema`.`persons`");
         List<User> users = new ArrayList<>();
@@ -48,22 +47,79 @@ public class UserRepository {
         return users;
     }
 
-    public boolean save(User user) throws SQLException {
+    public static boolean save(User user) throws SQLException {
         Connection connection = getConnection();
         PreparedStatement statement = connection.prepareStatement(
-                "INSERT INTO `competence-schema`.`persons` (id, phone_number, profile_name, experiment_id, user_gender, user_age) VALUES (?, ?, ?, ?, ?, ?)");
+                "INSERT INTO `competence-schema`.`persons` "
+                        + "(id, phone_number, profile_name, experiment_id, user_gender, user_age)"
+                        + " VALUES (?, ?, ?, ?, ?, ?)");
         statement.setString(1, user.getUserID().toString());
         statement.setString(2, user.getPhoneNumber());
         statement.setString(3, user.getUserType().toString());
         statement.setString(4, user.getExperimentId());
         statement.setString(5, user.getUserGender().name());
         statement.setInt(6, user.getUserAge());
-        boolean isFinished =  statement.executeUpdate() > 0;
+        boolean isFinished = statement.executeUpdate() > 0;
         connection.close();
         return isFinished;
     }
 
-    public boolean updateById(User user) throws SQLException {
+    public static boolean saveAll(List<User> users) throws SQLException {
+        Connection connection = getConnection();
+        StringBuilder sb = new StringBuilder();
+        sb.append("INSERT INTO `competence-schema`.`persons` "
+                + "(id, phone_number, profile_name, experiment_id, user_gender, user_age)"
+                + " VALUES ");
+
+        for (int i = 0; i < users.size() - 1; i++) {
+            sb.append("(");
+            sb.append(getUserValuesString(users.get(i)));
+            sb.append("), ");
+        }
+        sb.append("(");
+        sb.append(getUserValuesString(users.get(users.size() - 1)));
+        sb.append(");");
+
+        PreparedStatement statement = connection.prepareStatement(sb.toString());
+
+        boolean isFinished = statement.executeUpdate() > 0;
+        connection.close();
+        return isFinished;
+    }
+
+    @Override
+    public boolean saveAllGeneric(List<User> objects) {
+        try {
+            return saveAll(objects);
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * Creates string made of user's fields separated by ", ";
+     * @param user with all fields set
+     * @return string made of user's fields
+     */
+    private static String getUserValuesString (User user) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("'");
+        sb.append(user.getUserID().toString());
+        sb.append("', '");
+        sb.append(user.getPhoneNumber());
+        sb.append("', '");
+        sb.append(user.getUserType().toString());
+        sb.append("', '");
+        sb.append(user.getExperimentId());
+        sb.append("', '");
+        sb.append(user.getUserGender().toString());
+        sb.append("', ");
+        sb.append(user.getUserAge());
+        return sb.toString();
+    }
+
+    public static boolean updateById(User user) throws SQLException {
         Connection connection = getConnection();
         PreparedStatement statement = connection.prepareStatement(
                 "UPDATE `competence-schema`.`persons` SET phone_number=?, profile_name=?, experiment_id=?, user_gender=?, user_age=? WHERE id=?");
@@ -79,7 +135,7 @@ public class UserRepository {
         return isFinished;
     }
 
-    public boolean delete(UUID id) throws SQLException {
+    public static boolean delete(UUID id) throws SQLException {
         Connection connection = getConnection();
         PreparedStatement statement = connection.prepareStatement("DELETE FROM `competence-schema`.`persons` WHERE id=?");
         statement.setString(1, id.toString());

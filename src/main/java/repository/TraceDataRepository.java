@@ -14,13 +14,13 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class TraceRepository {
+public class TraceDataRepository {
 
     private static final String TABLE_NAME = "traces";
 
     private final Session session;
 
-    public TraceRepository(Session session) {
+    public TraceDataRepository(Session session) {
         this.session = session;
     }
 
