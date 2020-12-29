@@ -11,10 +11,12 @@ import java.util.Scanner;
 public class MainMenu implements Menu {
     private final Scanner scanner;
     private final FooMenu exampleSubmenu;
+    private final GenerationMenu generationMenu;
 
     public MainMenu(Scanner scanner) {
         this.scanner = scanner;
         this.exampleSubmenu = new FooMenu(this, scanner);
+        this.generationMenu = new GenerationMenu(this, scanner);
     }
 
     @Override
@@ -30,6 +32,8 @@ public class MainMenu implements Menu {
         String input = scanner.nextLine();
         switch (Choose.getChoose(input)) {
             case generateAndSave:
+                this.generationMenu.execute();
+                break;
             case statistics:
             case ranking:
             case clustering:

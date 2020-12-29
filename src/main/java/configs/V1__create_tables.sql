@@ -38,8 +38,7 @@ CREATE TABLE `competence-schema`.`poi` (
   `experiment_id` VARCHAR(36) NOT NULL,
   FOREIGN KEY (`type`) REFERENCES `competence-schema`.`poi_types`(`name`),
   FOREIGN KEY (`experiment_id`) REFERENCES `competence-schema`.`experiments`(`id`),
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `name_UNIQUE` (`name` ASC));
+  PRIMARY KEY (`id`));
 
 
 CREATE TABLE `competence-schema`.`traces` (
