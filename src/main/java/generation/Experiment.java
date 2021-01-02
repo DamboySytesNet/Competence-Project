@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Getter
 public class Experiment {
-    private UUID id;
+    private String id;
     private List<User> users;
     private List<POI> pois;
     private List<Trace> traces;
@@ -23,7 +23,11 @@ public class Experiment {
     private final TraceGenerator traceGenerator;
 
     public Experiment(int noUsers, int noPois, int noTraces, int timeStep) {
-        this.id = UUID.randomUUID();
+        this(UUID.randomUUID().toString(), noUsers, noPois, noTraces, timeStep);
+    }
+
+    public Experiment(String expId, int noUsers, int noPois, int noTraces, int timeStep) {
+        this.id = expId;
         this.startTime = LocalDateTime.now();
         this.currentTime = startTime;
         this.timeStep = timeStep;
