@@ -22,9 +22,10 @@ public class TraceDataRepository {
 
     public TraceDataRepository(Session session) {
         this.session = session;
+        this.createTable();
     }
 
-    public void createTable() {
+    private void createTable() {
         StringBuilder sb = new StringBuilder("CREATE TABLE IF NOT EXISTS ")
                 .append(TABLE_NAME)
                 .append("(")

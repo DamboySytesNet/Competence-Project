@@ -19,18 +19,8 @@ public class TraceDataRepositoryTest {
         CassandraConnector connector = new CassandraConnector();
         connector.connect();
 
-        String keyspaceName = "competence_project";
-
-        KeyspaceRepository keyspaceRepository = new KeyspaceRepository(connector.getSession());
-        keyspaceRepository.createKeyspace(
-                keyspaceName,
-                "SimpleStrategy",
-                1);
-
-        keyspaceRepository.useKeyspace(keyspaceName);
         TraceDataRepository traceDataRepository = new TraceDataRepository(connector.getSession());
 
-        traceDataRepository.createTable();
         TraceData traceData = TraceData.builder()
                 .id(UUID.randomUUID())
                 .userId(UUID.randomUUID())

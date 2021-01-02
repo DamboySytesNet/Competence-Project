@@ -8,6 +8,8 @@ import repository.POIRepository;
 import repository.UserRepository;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TraceDataMapper {
 
@@ -27,5 +29,23 @@ public class TraceDataMapper {
                 .pointOfInterest(poi)
                 .user(user)
                 .build();
+    }
+
+    public static TraceData mapTraceToTraceData(Trace trace){
+        return TraceData.builder()
+                .id(trace.getId())
+                .entryTime(trace.getEntryTime())
+                .exitTime(trace.getExitTime())
+                .userId(trace.getUser().getUserID())
+                .pointOfInterestId(trace.getPointOfInterest().getId())
+                .build();
+    }
+
+    public static List<TraceData> mapTracesToTracesData(List<Trace> traces){
+        List<TraceData> tracesData = new ArrayList<>();
+        for(Trace trace : traces){
+            tracesData.add(mapTraceToTraceData(trace));
+        }
+        return tracesData;
     }
 }
