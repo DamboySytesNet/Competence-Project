@@ -7,7 +7,7 @@ insert into `competence-schema`.`poi_types` values('indoor');
 insert into `competence-schema`.`poi_types` values('other');
 
 
-insert into `competence-schema`.`experiments` values('1', NOW(), 'exp');
+insert into `competence-schema`.`experiments` values('ccb7764e-4e85-11eb-ae93-0242ac130002', NOW());
 
 
 alter table `competence-schema`.`persons` add column `user_gender` VARCHAR(64) NOT NULL;
@@ -16,9 +16,9 @@ ALTER TABLE `competence-schema`.`persons` DROP INDEX `profile_name_UNIQUE`;
 ALTER TABLE `competence-schema`.`persons` ADD FOREIGN KEY (profile_name) REFERENCES `competence-schema`.`profiles`(`name`);
 
 CREATE TABLE `competence-schema`.`user_gender` (
-                                                   `name` VARCHAR(64) NOT NULL,
-                                                   PRIMARY KEY (`name`),
-                                                   UNIQUE INDEX `name_UNIQUE` (`name` ASC));
+    `name` VARCHAR(64) NOT NULL,
+    PRIMARY KEY (`name`),
+    UNIQUE INDEX `name_UNIQUE` (`name` ASC));
 
 ALTER TABLE `competence-schema`.`persons` ADD FOREIGN KEY (user_gender) REFERENCES `competence-schema`.`user_gender`(`name`);
 

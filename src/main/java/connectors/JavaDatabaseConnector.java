@@ -3,8 +3,8 @@ package connectors;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class JavaDatabaseConnector {
 
@@ -33,8 +33,7 @@ public class JavaDatabaseConnector {
         Connection connection = null;
         try {
             Class.forName(DRIVER_NAME);
-            connection = DriverManager.getConnection(
-                    URL, USERNAME, PASSWORD);
+            connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
         } catch (ClassNotFoundException | SQLException e) {
             System.out.println(e);
         }

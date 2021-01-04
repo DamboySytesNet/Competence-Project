@@ -5,6 +5,7 @@ import model.POI;
 import model.Trace;
 import model.User;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,7 +24,11 @@ public class Experiment {
     private final TraceGenerator traceGenerator;
 
     public Experiment(int noUsers, int noPois, int noTraces, int timeStep) {
-        this.id = UUID.randomUUID();
+        this(UUID.randomUUID(), noUsers, noPois, noTraces, timeStep);
+    }
+
+    public Experiment(UUID expId, int noUsers, int noPois, int noTraces, int timeStep) {
+        this.id = expId;
         this.startTime = LocalDateTime.now();
         this.currentTime = startTime;
         this.timeStep = timeStep;
@@ -35,7 +40,11 @@ public class Experiment {
 
         this.users = new LinkedList<>();
         for (int i = 0; i < noUsers; ++i) {
-            users.add(UserFactory.getInstance().generate(id.toString()));
+            try {
+                users.add(UserFactory.getInstance().generate(id.toString()));
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
 
         this.traces = new LinkedList<>();

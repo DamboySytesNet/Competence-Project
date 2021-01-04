@@ -10,6 +10,7 @@ import repository.TraceDataRepository;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -20,7 +21,7 @@ public class TraceDataRepositoryTest {
         CassandraConnector connector = new CassandraConnector();
         connector.connect();
 
-        TraceDataRepository traceRepository = new TraceDataRepository(connector.getSession());
+        TraceDataRepository traceDataRepository = new TraceDataRepository(connector.getSession());
 
         TraceData traceData = TraceData.builder()
                 .id(UUID.randomUUID())
@@ -30,20 +31,20 @@ public class TraceDataRepositoryTest {
                 .exitTime(LocalDateTime.now())
                 .build();
 
-        long totalTraces = traceRepository.getTotalNumberOfTraces();
+        long totalTraces = traceDataRepository.getTotalNumberOfTraces();
 
-        traceRepository.insertTrace(traceData);
+        traceDataRepository.insertTrace(traceData);
 
-        TraceData savedData = traceRepository.getTraceById(traceData.getId());
+        TraceData savedData = traceDataRepository.getTraceById(traceData.getId());
 
         assertTracesEquals(traceData, savedData);
         Assert.assertNull(traceData.getPreviousTraceId());
 
-        Assert.assertEquals(totalTraces + 1, traceRepository.getTotalNumberOfTraces());
+        Assert.assertEquals(totalTraces + 1, traceDataRepository.getTotalNumberOfTraces());
 
-        traceRepository.deleteTraces(Collections.singletonList(traceData.getId()));
+        traceDataRepository.deleteTraces(Collections.singletonList(traceData.getId()));
 
-        Assert.assertEquals(totalTraces, traceRepository.getTotalNumberOfTraces());
+        Assert.assertEquals(totalTraces, traceDataRepository.getTotalNumberOfTraces());
 
         TraceData secondTraceData = TraceData.builder()
                 .id(UUID.randomUUID())
@@ -53,9 +54,10 @@ public class TraceDataRepositoryTest {
                 .exitTime(LocalDateTime.now())
                 .pointOfInterestId(traceData.getId())
                 .build();
-        traceRepository.insertTrace(secondTraceData);
+      
+        traceDataRepository.insertTrace(secondTraceData);
 
-        TraceData savedSecondData = traceRepository.getTraceById(secondTraceData.getId());
+        TraceData savedSecondData = traceDataRepository.getTraceById(secondTraceData.getId());
 
         Assert.assertEquals(secondTraceData.getPreviousTraceId(), savedSecondData.getPreviousTraceId());
 

@@ -38,6 +38,7 @@ public class TraceDataRepository {
                 .append("creation_time timestamp,")
                 .append("previous_trace_id uuid,")
                 .append("PRIMARY KEY (id, entry_time));");
+                .append("PRIMARY KEY (id));");
         session.execute(sb.toString());
     }
 
