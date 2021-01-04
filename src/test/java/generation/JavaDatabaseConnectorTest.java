@@ -1,12 +1,12 @@
 package generation;
 
 import connectors.JavaDatabaseConnector;
+import model.Geolocalization;
 import model.POI;
+import model.POIType;
 import model.User;
 import model.UserGender;
 import model.UserType;
-import model.Geolocalization;
-import model.POIType;
 import org.junit.Assert;
 import org.junit.Test;
 import repository.POIRepository;
@@ -41,26 +41,26 @@ public class JavaDatabaseConnectorTest {
     public void checkUserCrud() throws SQLException {
         //given:
         String query = "SELECT * FROM `competence-schema`.`persons`";
-        UserRepository userRepository = new UserRepository();
         User stUser = new User(UUID.randomUUID(), "111222333",
                 21, UserType.student, UserGender.female, "1");
         User ndUser = new User(UUID.fromString("e734b220-dffb-4e86-9ed3-e384afef233a"), "111222456",
                 48, UserType.teacher, UserGender.helikopter_szturmowy, "1");
 
         //when:
-        boolean stAdded = userRepository.save(stUser);
+        long numberOfUsersBefore = UserRepository.getTotalNumberOfUsers();
+        boolean stAdded = UserRepository.save(stUser);
 
-        User getUser = userRepository.getById(stUser.getUserID());
+        User getUser = UserRepository.getById(stUser.getUserID());
 
-        boolean ndAdded = userRepository.save(ndUser);
+        boolean ndAdded = UserRepository.save(ndUser);
         ndUser.setUserAge(49);
         ndUser.setUserGender(UserGender.female);
-        boolean updated = userRepository.updateById(ndUser);
+        boolean updated = UserRepository.updateById(ndUser);
 
-        List<User> users = userRepository.getAll();
+        List<User> users = UserRepository.getAll();
 
-        boolean deleted = userRepository.delete(stUser.getUserID());
-        boolean deleted2 = userRepository.delete(UUID.fromString("e734b220-dffb-4e86-9ed3-e384afef233a"));
+        boolean deleted = UserRepository.delete(stUser.getUserID());
+        boolean deleted2 = UserRepository.delete(UUID.fromString("e734b220-dffb-4e86-9ed3-e384afef233a"));
 
         //then:
         Assert.assertTrue(stAdded);
@@ -68,15 +68,13 @@ public class JavaDatabaseConnectorTest {
         Assert.assertTrue(updated);
         Assert.assertTrue(deleted);
         Assert.assertTrue(deleted2);
-        Assert.assertEquals(2, users.size());
+        Assert.assertEquals(numberOfUsersBefore + 2, users.size());
         Assert.assertEquals(getUser, stUser);
     }
 
     @Test
     public void checkPOICrud() throws SQLException {
         //given:
-        POIRepository poiRepository = new POIRepository();
-
         POI stPOI = POI.builder()
                 .name("testName")
                 .description("testDescription")
@@ -95,20 +93,20 @@ public class JavaDatabaseConnectorTest {
 
 
         //when:
-        boolean stAdded = poiRepository.save(stPOI);
+        boolean stAdded = POIRepository.save(stPOI);
 
-        POI getPOI = poiRepository.getByName("testName");
+        POI getPOI = POIRepository.getByName("testName");
 
-        boolean ndAdded = poiRepository.save(ndPOI);
+        boolean ndAdded = POIRepository.save(ndPOI);
         ndPOI.getGeolocalization().setLatitude(22.69);
         ndPOI.setType(POIType.other);
 
-        boolean updated = poiRepository.updateByName(ndPOI);
+        boolean updated = POIRepository.updateByName(ndPOI);
 
-        List<POI> pois = poiRepository.getAll();
+        List<POI> pois = POIRepository.getAll();
 
-        boolean deleted = poiRepository.delete("testName");
-        boolean deleted2 = poiRepository.delete("testName2");
+        boolean deleted = POIRepository.delete("testName");
+        boolean deleted2 = POIRepository.delete("testName2");
 
         //then:
         Assert.assertTrue(stAdded);

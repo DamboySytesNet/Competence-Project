@@ -8,7 +8,7 @@ import model.TraceData;
 import model.User;
 import repository.KeyspaceRepository;
 import repository.POIRepository;
-import repository.TraceRepository;
+import repository.TraceDataRepository;
 import repository.UserRepository;
 
 import java.sql.SQLException;
@@ -21,7 +21,7 @@ public class GenerationMenu implements Menu{
     private final Menu mainMenu;
     private final UserRepository userRepository;
     private final POIRepository poiRepository;
-    private final TraceRepository traceRepository;
+    private final TraceDataRepository traceRepository;
 
     public GenerationMenu(MainMenu mainMenu, Scanner scanner) {
         this.scanner = scanner;
@@ -41,7 +41,7 @@ public class GenerationMenu implements Menu{
                 1);
 
         keyspaceRepository.useKeyspace(keyspaceName);
-        this.traceRepository = new TraceRepository(connector.getSession());
+        this.traceRepository = new TraceDataRepository(connector.getSession());
 
         traceRepository.createTable();
     }

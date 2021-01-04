@@ -25,7 +25,7 @@ public class TraceDataRepository {
         this.createTable();
     }
 
-    private void createTable() {
+    public void createTable() {
         StringBuilder sb = new StringBuilder("CREATE TABLE IF NOT EXISTS ")
                 .append(TABLE_NAME)
                 .append("(")
