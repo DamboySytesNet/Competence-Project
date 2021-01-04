@@ -15,14 +15,15 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class TraceRepository {
+public class TraceDataRepository {
 
     private static final String TABLE_NAME = "traces";
 
     private final Session session;
 
-    public TraceRepository(Session session) {
+    public TraceDataRepository(Session session) {
         this.session = session;
+        this.createTable();
     }
 
     public void createTable() {
@@ -49,8 +50,6 @@ public class TraceRepository {
 
     public void insertTrace(TraceData traceData) {
         ZoneOffset offset = ZoneOffset.systemDefault().getRules().getOffset(LocalDateTime.now());
-
-        System.out.println(traceData.getEntryTime().toInstant(offset).toEpochMilli());
 
         StringBuilder sb = new StringBuilder("INSERT INTO ")
                 .append(TABLE_NAME)

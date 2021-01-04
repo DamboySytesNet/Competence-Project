@@ -5,33 +5,23 @@ import model.TraceData;
 import org.junit.Assert;
 import org.junit.Test;
 import repository.KeyspaceRepository;
-import repository.TraceRepository;
+import repository.TraceDataRepository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-public class TraceRepositoryTest {
+public class TraceDataRepositoryTest {
 
     @Test
     public void test() {
         CassandraConnector connector = new CassandraConnector();
         connector.connect();
 
-        String keyspaceName = "competence_project";
+        TraceDataRepository traceRepository = new TraceDataRepository(connector.getSession());
 
-        KeyspaceRepository keyspaceRepository = new KeyspaceRepository(connector.getSession());
-        keyspaceRepository.createKeyspace(
-                keyspaceName,
-                "SimpleStrategy",
-                1);
-
-        keyspaceRepository.useKeyspace(keyspaceName);
-        TraceRepository traceRepository = new TraceRepository(connector.getSession());
-        traceRepository.createTable();
         TraceData traceData = TraceData.builder()
                 .id(UUID.randomUUID())
                 .userId(UUID.randomUUID())
@@ -107,17 +97,7 @@ public class TraceRepositoryTest {
         CassandraConnector connector = new CassandraConnector();
         connector.connect();
 
-        String keyspaceName = "competence_project";
-
-        KeyspaceRepository keyspaceRepository = new KeyspaceRepository(connector.getSession());
-        keyspaceRepository.createKeyspace(
-                keyspaceName,
-                "SimpleStrategy",
-                1);
-
-        keyspaceRepository.useKeyspace(keyspaceName);
-        TraceRepository traceRepository = new TraceRepository(connector.getSession());
-        traceRepository.createTable();
+        TraceDataRepository traceRepository = new TraceDataRepository(connector.getSession());
 
         long totalTracesForToday = traceRepository.getTracesForToday().size();
 
