@@ -19,5 +19,5 @@ public class Trace {
     private final POI pointOfInterest;
     private final LocalDateTime entryTime;
     private final LocalDateTime exitTime;
-
+    private final UUID experimentId;
 }

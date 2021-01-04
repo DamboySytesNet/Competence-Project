@@ -66,7 +66,7 @@ public class TraceGenerator {
         return ChronoUnit.MINUTES.between(this.lastStepTime, currentTime);
     }
 
-    public List<Trace> generateTraces(LocalDateTime time) {
+    public List<Trace> generateTraces(LocalDateTime time, UUID experimentId) {
         long timeStep = this.calcTimeStep(time);
         List<Trace> traces = new LinkedList<>();
 
@@ -91,7 +91,8 @@ public class TraceGenerator {
                             userTraceInformation.getUser(),
                             userTraceInformation.getNewPOI(),
                             time,
-                            exitTime);
+                            exitTime,
+                            experimentId);
 
                     traces.add(newTrace);
                 } else {
