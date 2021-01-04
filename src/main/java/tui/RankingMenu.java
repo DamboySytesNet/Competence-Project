@@ -47,8 +47,6 @@ public class RankingMenu implements Menu{
     }
 
     public void createRanking(String title, HashMap<POI, Integer> rank){
-
-
         System.out.println("Done");
         System.out.println(title);
         System.out.println("----------------------------------------------------");
@@ -65,28 +63,39 @@ public class RankingMenu implements Menu{
         System.out.println("[2] - Ranking based on number of visits in POI (Descending)");
         System.out.println("[3] - Ranking based on time spent in POI (Ascending)");
         System.out.println("[4] - Ranking based on time spent in POI (Descending)");
+        System.out.println("[5] - Back to main menu");
 
 
 
         String input = scanner.nextLine();
-        System.out.println("Creating Your Ranking...");
-        numberofTraces = traceRepository.getTotalNumberOfTraces();
-        traces = TraceDataMapper.mapTraceDataToTraces(traceRepository.getTraces(0, numberofTraces));
+
         switch (RankingMenu.Choose.getChoose(input)) {
             case usersVisitsAscending:
+                System.out.println("Please wait");
+                numberofTraces = traceRepository.getTotalNumberOfTraces();
+                traces = TraceDataMapper.mapTraceDataToTraces(traceRepository.getTraces(0, numberofTraces));
                 createRanking("Ranking based on number of visits in POI (Ascending)",POIRanking.generateVisitorsCountRanking(traces, false));
                 break;
             case usersVisitsDescending:
-                createRanking("[2] - Ranking based on number of visits in POI (Descending)",POIRanking.generateVisitorsCountRanking(traces, true));
+                System.out.println("Please wait");
+                numberofTraces = traceRepository.getTotalNumberOfTraces();
+                traces = TraceDataMapper.mapTraceDataToTraces(traceRepository.getTraces(0, numberofTraces));
+                createRanking("Ranking based on number of visits in POI (Descending)",POIRanking.generateVisitorsCountRanking(traces, true));
                 break;
             case timeSpentAscending:
-                createRanking("[3] - Ranking based on time spent in POI (Ascending)",POIRanking.generateTimeSpentRanking(traces, false));
+                System.out.println("Please wait");
+                numberofTraces = traceRepository.getTotalNumberOfTraces();
+                traces = TraceDataMapper.mapTraceDataToTraces(traceRepository.getTraces(0, numberofTraces));
+                createRanking("Ranking based on time spent in POI (Ascending)",POIRanking.generateTimeSpentRanking(traces, false));
                 break;
             case timeSpentDescending:
-                createRanking("[3] - Ranking based on time spent in POI (Descending)",POIRanking.generateTimeSpentRanking(traces, true));
+                System.out.println("Please wait");
+                numberofTraces = traceRepository.getTotalNumberOfTraces();
+                traces = TraceDataMapper.mapTraceDataToTraces(traceRepository.getTraces(0, numberofTraces));
+                createRanking("Ranking based on time spent in POI (Descending)",POIRanking.generateTimeSpentRanking(traces, true));
                 break;
             case none:
-                execute();
+                mainMenu.execute();
 
         }
         this.mainMenu.execute();
@@ -97,7 +106,7 @@ public class RankingMenu implements Menu{
         usersVisitsDescending("2"),
         timeSpentAscending("3"),
         timeSpentDescending("4"),
-        none;
+        none("5");
 
         Choose(String... names) {
             this.names = names;
