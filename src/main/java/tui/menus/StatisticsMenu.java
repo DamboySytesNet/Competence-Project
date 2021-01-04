@@ -28,9 +28,26 @@ public class StatisticsMenu implements Menu {
 
     @Override
     public void execute() {
+
+
+
         System.out.println("[1] - Get length of stay");
         System.out.println("[2] - Get longest route");
         System.out.println("[3] - Get most popular POI");
+        System.out.println("[0] - Back");
+        // Choose experiment
+
+        // Get all traces
+        // Sort traces
+        // Add traces to statistics
+
+        // List users
+        // List POIs
+
+        System.out.println("[1] - Get length of stay");
+        System.out.println("[2] - Get longest route");
+        System.out.println("[3] - Get most popular POI");
+        System.out.println("[0] - Back");
 
         String userId;
         String poiId;
@@ -55,10 +72,10 @@ public class StatisticsMenu implements Menu {
                 System.out.println(statistics.getMostPopularPOIText(poiId));
                 break;
             case exit:
-                execute();
+                parent.execute();
         }
 
-
+        parent.execute();
     }
 
     enum Choice {
