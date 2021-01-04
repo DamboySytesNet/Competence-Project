@@ -98,7 +98,6 @@ public class RankingMenu implements Menu{
                 mainMenu.execute();
 
         }
-        this.mainMenu.execute();
     }
 
     enum Choose {
@@ -106,7 +105,7 @@ public class RankingMenu implements Menu{
         usersVisitsDescending("2"),
         timeSpentAscending("3"),
         timeSpentDescending("4"),
-        none("5");
+        none();
 
         Choose(String... names) {
             this.names = names;
