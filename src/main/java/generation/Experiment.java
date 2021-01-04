@@ -4,6 +4,7 @@ import lombok.Getter;
 import model.POI;
 import model.Trace;
 import model.User;
+import repository.ExperimentRepository;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -51,7 +52,7 @@ public class Experiment {
         this.traceGenerator = new TraceGenerator(users, pois, currentTime);
         do {
             this.currentTime = currentTime.plusMinutes(this.timeStep);
-            traces.addAll(traceGenerator.generateTraces(currentTime));
+            traces.addAll(traceGenerator.generateTraces(currentTime, ExperimentRepository.DEFAULT_ID));
         } while (traces.size() < noTraces);
     }
 }

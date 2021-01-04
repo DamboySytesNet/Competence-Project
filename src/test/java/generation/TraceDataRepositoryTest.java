@@ -4,7 +4,7 @@ import connectors.CassandraConnector;
 import model.TraceData;
 import org.junit.Assert;
 import org.junit.Test;
-import repository.KeyspaceRepository;
+import repository.ExperimentRepository;
 import repository.TraceDataRepository;
 
 import java.time.LocalDateTime;
@@ -15,10 +15,9 @@ import java.util.UUID;
 public class TraceDataRepositoryTest {
 
     @Test
-    public void test() {
+    public void connectionTest() {
         CassandraConnector connector = new CassandraConnector();
         connector.connect();
-
         TraceDataRepository traceDataRepository = new TraceDataRepository(connector.getSession());
 
         TraceData traceData = TraceData.builder()
@@ -27,6 +26,7 @@ public class TraceDataRepositoryTest {
                 .pointOfInterestId(UUID.randomUUID())
                 .entryTime(LocalDateTime.now())
                 .exitTime(LocalDateTime.now())
+                .experimentId(ExperimentRepository.DEFAULT_ID)
                 .build();
 
         long totalTraces = traceDataRepository.getTotalNumberOfTraces();
@@ -51,6 +51,7 @@ public class TraceDataRepositoryTest {
                 .entryTime(LocalDateTime.now())
                 .exitTime(LocalDateTime.now())
                 .pointOfInterestId(traceData.getId())
+                .experimentId(ExperimentRepository.DEFAULT_ID)
                 .build();
         traceDataRepository.insertTrace(secondTraceData);
 
@@ -65,6 +66,7 @@ public class TraceDataRepositoryTest {
                 .entryTime(LocalDateTime.now())
                 .exitTime(LocalDateTime.now())
                 .pointOfInterestId(secondTraceData.getId())
+                .experimentId(ExperimentRepository.DEFAULT_ID)
                 .build();
 
         TraceData fourthTraceData = TraceData.builder()
@@ -74,6 +76,7 @@ public class TraceDataRepositoryTest {
                 .entryTime(LocalDateTime.now())
                 .exitTime(LocalDateTime.now())
                 .pointOfInterestId(thirdTraceData.getId())
+                .experimentId(ExperimentRepository.DEFAULT_ID)
                 .build();
 
         traceDataRepository.insertTraces(Arrays.asList(thirdTraceData, fourthTraceData));

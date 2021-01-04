@@ -6,6 +6,7 @@ import model.User;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import repository.ExperimentRepository;
 
 import java.time.LocalDateTime;
 import java.util.LinkedList;
@@ -47,7 +48,7 @@ public class TraceGeneratorTest {
 
         do {
             currentTime = currentTime.plusMinutes(this.timeStep);
-            traces.addAll(this.traceGenerator.generateTraces(currentTime));
+            traces.addAll(this.traceGenerator.generateTraces(currentTime, ExperimentRepository.DEFAULT_ID));
         } while (traces.size() < 10);
         
         // check

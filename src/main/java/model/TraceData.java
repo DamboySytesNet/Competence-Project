@@ -20,4 +20,5 @@ public class TraceData {
     private final LocalDateTime entryTime;
     private final LocalDateTime exitTime;
     private UUID previousTraceId;
+    private final UUID experimentId;
 }

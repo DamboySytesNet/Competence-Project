@@ -28,6 +28,7 @@ public class TraceDataMapper {
                 .exitTime(traceData.getExitTime())
                 .pointOfInterest(poi)
                 .user(user)
+                .experimentId(traceData.getExperimentId())
                 .build();
     }
 
@@ -38,6 +39,7 @@ public class TraceDataMapper {
                 .exitTime(trace.getExitTime())
                 .userId(trace.getUser().getUserID())
                 .pointOfInterestId(trace.getPointOfInterest().getId())
+                .experimentId(trace.getExperimentId())
                 .build();
     }
 
