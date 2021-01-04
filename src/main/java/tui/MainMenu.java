@@ -12,11 +12,13 @@ public class MainMenu implements Menu {
     private final Scanner scanner;
     private final FooMenu exampleSubmenu;
     private final GenerationMenu generationMenu;
+    private final RankingMenu rankingMenu;
 
     public MainMenu(Scanner scanner) {
         this.scanner = scanner;
         this.exampleSubmenu = new FooMenu(this, scanner);
         this.generationMenu = new GenerationMenu(this, scanner);
+        this.rankingMenu = new RankingMenu(this, scanner);
     }
 
     @Override
@@ -36,6 +38,8 @@ public class MainMenu implements Menu {
                 break;
             case statistics:
             case ranking:
+                this.rankingMenu.execute();
+                break;
             case clustering:
             case neuralNetwork:
             case options:
