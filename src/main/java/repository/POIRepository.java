@@ -58,7 +58,7 @@ public class POIRepository implements RepositorySaver<POI>{
         PreparedStatement statement = connection.prepareStatement(
                 "INSERT INTO `competence-schema`.`poi` (id, name, description, x, y, type, experiment_id)"
                         + " VALUES (?, ?, ?, ?, ?, ?, ?)");
-        statement.setString(1, UUID.randomUUID().toString());
+        statement.setString(1, poi.getId().toString());
         statement.setString(2, poi.getName());
         statement.setString(3, poi.getDescription());
         statement.setDouble(4, poi.getGeolocalization().getLatitude());

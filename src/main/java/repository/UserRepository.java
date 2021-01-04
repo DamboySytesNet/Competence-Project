@@ -87,6 +87,19 @@ public class UserRepository implements RepositorySaver<User> {
         return isFinished;
     }
 
+    public static boolean existsWithPhoneNumber(String phoneNumber) throws SQLException {
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(
+                "SELECT COUNT(1) AS found FROM `competence-schema`.`persons` WHERE phone_number=?");
+        statement.setString(1, phoneNumber);
+        ResultSet resultSet = statement.executeQuery();
+        resultSet.next();
+        boolean exists = Integer.parseInt(resultSet.getString("found")) == 1;
+
+        connection.close();
+        return exists;
+    }
+
     @Override
     public boolean saveAllGeneric(List<User> objects) {
         try {

@@ -7,7 +7,7 @@ insert into `competence-schema`.`poi_types` values('indoor');
 insert into `competence-schema`.`poi_types` values('other');
 
 
-insert into `competence-schema`.`experiments` values('1', NOW());
+insert into `competence-schema`.`experiments` values('ccb7764e-4e85-11eb-ae93-0242ac130002', NOW());
 
 
 alter table `competence-schema`.`persons` add column `user_gender` VARCHAR(64) NOT NULL;

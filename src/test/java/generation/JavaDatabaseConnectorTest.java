@@ -19,6 +19,8 @@ import java.util.UUID;
 
 public class JavaDatabaseConnectorTest {
 
+    private static final String EXPERIMENT_ID = "ccb7764e-4e85-11eb-ae93-0242ac130002";
+
     @Test
     public void checkConnection() {
         //given:
@@ -36,15 +38,14 @@ public class JavaDatabaseConnectorTest {
      * Przed wykonaniem poniższych testow w bazie danych muszą byc dodadne odpowiednie krotki -
      * znajduja sie one w V2__insert_init_values.sql
      **/
-
     @Test
     public void checkUserCrud() throws SQLException {
         //given:
         String query = "SELECT * FROM `competence-schema`.`persons`";
         User stUser = new User(UUID.randomUUID(), "111222333",
-                21, UserType.student, UserGender.female, "1");
+                21, UserType.student, UserGender.female, EXPERIMENT_ID);
         User ndUser = new User(UUID.fromString("e734b220-dffb-4e86-9ed3-e384afef233a"), "111222456",
-                48, UserType.teacher, UserGender.helikopter_szturmowy, "1");
+                48, UserType.teacher, UserGender.helikopter_szturmowy, EXPERIMENT_ID);
 
         //when:
         long numberOfUsersBefore = UserRepository.getTotalNumberOfUsers();
@@ -76,26 +77,29 @@ public class JavaDatabaseConnectorTest {
     public void checkPOICrud() throws SQLException {
         //given:
         POI stPOI = POI.builder()
+                .id(UUID.randomUUID())
                 .name("testName")
                 .description("testDescription")
                 .geolocalization(new Geolocalization(22.11, 33.43))
                 .type(POIType.outdoor)
-                .experimentId("1")
+                .experimentId(EXPERIMENT_ID)
                 .build();
 
         POI ndPOI = POI.builder()
+                .id(UUID.randomUUID())
                 .name("testName2")
                 .description("testDescriptionABC")
                 .geolocalization(new Geolocalization(12.12, 66.13))
                 .type(POIType.outdoor)
-                .experimentId("1")
+                .experimentId(EXPERIMENT_ID)
                 .build();
 
 
         //when:
+        long numberOfPOIBefore = POIRepository.getTotalNumberOfPOI();
         boolean stAdded = POIRepository.save(stPOI);
 
-        POI getPOI = POIRepository.getByName("testName");
+        POI getPOI = POIRepository.getById(stPOI.getId());
 
         boolean ndAdded = POIRepository.save(ndPOI);
         ndPOI.getGeolocalization().setLatitude(22.69);
@@ -114,7 +118,7 @@ public class JavaDatabaseConnectorTest {
         Assert.assertTrue(updated);
         Assert.assertTrue(deleted);
         Assert.assertTrue(deleted2);
-        Assert.assertEquals(2, pois.size());
+        Assert.assertEquals(numberOfPOIBefore + 2, pois.size());
         Assert.assertEquals(getPOI, stPOI);
     }
 }
