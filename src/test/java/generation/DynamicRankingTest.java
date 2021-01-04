@@ -1,16 +1,10 @@
 package generation;
 
-import ranking.POIDynamicRanking;
-import ranking.POIRanking;
-import model.POI;
-import model.Trace;
-import model.User;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import ranking.POIDynamicRanking;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,9 +20,9 @@ public class DynamicRankingTest {
 
         this.experimentList = new LinkedList<>();
 
-        this.experimentList.add(new Experiment(1412,1240,1412, 3 ));
-        this.experimentList.add(new Experiment(4456,7566,5677, 3 ));
-        this.experimentList.add(new Experiment(4235,6634,3534, 3 ));
+        this.experimentList.add(new Experiment(141,124,141, 3));
+        this.experimentList.add(new Experiment(445,756,567, 3));
+        this.experimentList.add(new Experiment(423,663,353, 3));
     }
 
     @Test

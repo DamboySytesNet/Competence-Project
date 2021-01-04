@@ -10,6 +10,7 @@ import model.User;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import repository.ExperimentRepository;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -49,7 +50,7 @@ public class StatisticsTest {
         TraceGenerator traceGenerator = new TraceGenerator(users, pointsOfInterest, currentTime);
 
         for (int i = 0; i < 60; i++) {
-            traces.addAll(traceGenerator.generateTraces(currentTime));
+            traces.addAll(traceGenerator.generateTraces(currentTime, ExperimentRepository.DEFAULT_ID));
             currentTime = currentTime.plusMinutes(GeneratorConsts.TIME_STEP);
         }
 
