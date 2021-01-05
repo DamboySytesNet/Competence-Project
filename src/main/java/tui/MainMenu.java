@@ -16,6 +16,7 @@ public class MainMenu implements Menu {
     private final StatisticsMenu statisticsMenu;
     private final GenerationMenu generationMenu;
     private final ClusteringMenu clusteringMenu;
+    private final RankingMenu rankingMenu;
 
     public MainMenu(Scanner scanner) {
         this.scanner = scanner;
@@ -23,6 +24,7 @@ public class MainMenu implements Menu {
         this.generationMenu = new GenerationMenu(this, scanner);
         this.statisticsMenu = new StatisticsMenu(this, scanner);
         this.clusteringMenu = new ClusteringMenu(this, scanner, this.generationMenu.getTraceRepository());
+        this.rankingMenu = new RankingMenu(this, scanner);
     }
 
     @Override
@@ -44,6 +46,8 @@ public class MainMenu implements Menu {
                 statisticsMenu.execute();
                 break;
             case ranking:
+                this.rankingMenu.execute();
+                break;
             case clustering:
                 clusteringMenu.execute();
                 break;
