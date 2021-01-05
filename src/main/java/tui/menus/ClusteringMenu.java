@@ -6,7 +6,7 @@ import model.Trace;
 import model.TraceData;
 import ranking.POIDynamicRanking;
 import repository.POIRepository;
-import repository.TraceRepository;
+import repository.TraceDataRepository;
 import tui.Menu;
 
 import java.sql.SQLException;
@@ -17,13 +17,13 @@ import java.util.Scanner;
 public class ClusteringMenu implements Menu {
     private final Menu parent;
     private final Scanner scanner;
-    private final TraceRepository traceRepository;
+    private final TraceDataRepository traceRepository;
     private final POIRepository poiRepository;
     private final POIDynamicRanking dynamicRanking;
 
     private final ClusteringWindow clusteringWindow;
 
-    public ClusteringMenu(Menu parent, Scanner scanner, TraceRepository traceRepository) {
+    public ClusteringMenu(Menu parent, Scanner scanner, TraceDataRepository traceRepository) {
         this.dynamicRanking = new POIDynamicRanking();
         this.poiRepository = new POIRepository();
         this.traceRepository = traceRepository;
@@ -65,7 +65,7 @@ public class ClusteringMenu implements Menu {
         try {
             for (TraceData data : tracesData) {
                 traces.add(
-                        new Trace(null, poiRepository.getById(data.getPointOfInterestId().toString()), data.getEntryTime(), data.getExitTime()));
+                        new Trace(null, null, poiRepository.getById(data.getPointOfInterestId().toString()), data.getEntryTime(), data.getExitTime(), data.getExperimentId()));
             }
         } catch (SQLException e) {
             e.printStackTrace();

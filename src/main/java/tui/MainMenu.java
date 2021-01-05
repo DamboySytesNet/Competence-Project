@@ -21,7 +21,7 @@ public class MainMenu implements Menu {
         this.scanner = scanner;
         this.exampleSubmenu = new FooMenu(this, scanner);
         this.generationMenu = new GenerationMenu(this, scanner);
-        this.statisticsMenu = new StatisticsMenu(this, scanner, this.generationMenu.getTraceRepository());
+        this.statisticsMenu = new StatisticsMenu(this, scanner);
         this.clusteringMenu = new ClusteringMenu(this, scanner, this.generationMenu.getTraceRepository());
     }
 
