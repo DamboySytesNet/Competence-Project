@@ -23,7 +23,7 @@ public class Statistics {
 
         try {
             userUUID = UUID.fromString(userId);
-        } catch(Exception e) {
+        } catch(IllegalArgumentException e) {
             return null;
         }
 
@@ -40,7 +40,8 @@ public class Statistics {
         UUID poiUUID;
         try {
             poiUUID = UUID.fromString(poiID);
-        } catch(Exception e) {
+
+        } catch(IllegalArgumentException e) {
             return null;
         }
 
