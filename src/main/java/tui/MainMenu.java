@@ -1,6 +1,7 @@
 package tui;
 
 import tui.example.FooMenu;
+import tui.menus.ClusteringMenu;
 import tui.menus.StatisticsMenu;
 
 import java.util.Arrays;
@@ -14,6 +15,7 @@ public class MainMenu implements Menu {
     private final FooMenu exampleSubmenu;
     private final StatisticsMenu statisticsMenu;
     private final GenerationMenu generationMenu;
+    private final ClusteringMenu clusteringMenu;
     private final RankingMenu rankingMenu;
 
     public MainMenu(Scanner scanner) {
@@ -21,6 +23,8 @@ public class MainMenu implements Menu {
         this.exampleSubmenu = new FooMenu(this, scanner);
         this.statisticsMenu = new StatisticsMenu(this, scanner);
         this.generationMenu = new GenerationMenu(this, scanner);
+        this.statisticsMenu = new StatisticsMenu(this, scanner);
+        this.clusteringMenu = new ClusteringMenu(this, scanner, this.generationMenu.getTraceRepository());
         this.rankingMenu = new RankingMenu(this, scanner);
     }
 
@@ -46,6 +50,8 @@ public class MainMenu implements Menu {
                 this.rankingMenu.execute();
                 break;
             case clustering:
+                clusteringMenu.execute();
+                break;
             case neuralNetwork:
             case options:
                 exampleSubmenu.execute();

@@ -3,6 +3,7 @@ package tui;
 import connectors.CassandraConnector;
 import generation.Experiment;
 import generation.ExperimentSaver;
+import lombok.Getter;
 import repository.KeyspaceRepository;
 import repository.POIRepository;
 import repository.TraceDataRepository;
@@ -17,6 +18,7 @@ public class GenerationMenu implements Menu{
     private final Menu mainMenu;
     private final UserRepository userRepository;
     private final POIRepository poiRepository;
+    @Getter
     private final TraceDataRepository traceRepository;
 
     public GenerationMenu(MainMenu mainMenu, Scanner scanner) {

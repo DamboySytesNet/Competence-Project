@@ -40,6 +40,7 @@ public class Statistics {
         UUID poiUUID;
         try {
             poiUUID = UUID.fromString(poiID);
+
         } catch(IllegalArgumentException e) {
             return null;
         }
