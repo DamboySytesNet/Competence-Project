@@ -4,7 +4,9 @@ import lombok.Getter;
 import model.POI;
 import model.Trace;
 import model.User;
+import repository.ExperimentRepository;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,7 +14,7 @@ import java.util.UUID;
 
 @Getter
 public class Experiment {
-    private String id;
+    private UUID id;
     private List<User> users;
     private List<POI> pois;
     private List<Trace> traces;
@@ -23,10 +25,10 @@ public class Experiment {
     private final TraceGenerator traceGenerator;
 
     public Experiment(int noUsers, int noPois, int noTraces, int timeStep) {
-        this(UUID.randomUUID().toString(), noUsers, noPois, noTraces, timeStep);
+        this(UUID.randomUUID(), noUsers, noPois, noTraces, timeStep);
     }
 
-    public Experiment(String expId, int noUsers, int noPois, int noTraces, int timeStep) {
+    public Experiment(UUID expId, int noUsers, int noPois, int noTraces, int timeStep) {
         this.id = expId;
         this.startTime = LocalDateTime.now();
         this.currentTime = startTime;
@@ -39,14 +41,18 @@ public class Experiment {
 
         this.users = new LinkedList<>();
         for (int i = 0; i < noUsers; ++i) {
-            users.add(UserFactory.getInstance().generate(id.toString()));
+            try {
+                users.add(UserFactory.getInstance().generate(id.toString()));
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
 
         this.traces = new LinkedList<>();
         this.traceGenerator = new TraceGenerator(users, pois, currentTime);
         do {
             this.currentTime = currentTime.plusMinutes(this.timeStep);
-            traces.addAll(traceGenerator.generateTraces(currentTime));
+            traces.addAll(traceGenerator.generateTraces(currentTime, ExperimentRepository.DEFAULT_ID));
         } while (traces.size() < noTraces);
     }
 }

@@ -1,13 +1,13 @@
 package generation;
 
-import model.Geolocalization;
 import model.User;
 import model.UserGender;
 import model.UserType;
-
-import org.apache.commons.math3.distribution.UniformIntegerDistribution;
 import org.apache.commons.math3.distribution.NormalDistribution;
+import org.apache.commons.math3.distribution.UniformIntegerDistribution;
+import repository.UserRepository;
 
+import java.sql.SQLException;
 import java.util.Random;
 import java.util.UUID;
 
@@ -15,7 +15,7 @@ public class UserFactory {
     private NormalDistribution ageNormalDistribution;
     private UniformIntegerDistribution typeUniformDistribution;
     private UniformIntegerDistribution genderUniformDistribution;
-    private Random random ;
+    private Random random;
     private static UserFactory instance = new UserFactory();
 
     private UserFactory() {
@@ -29,18 +29,27 @@ public class UserFactory {
         return instance;
     }
 
-    public User generate() {
-        return generate("");
+    public User generate(){
+        try {
+            return generate("");
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return null;
     }
 
-    public User generate(String experimentId) {
+    public User generate(String experimentId) throws SQLException {
         int userAge;
         UUID userID = UUID.randomUUID();
         String phoneNumber = "";
-        phoneNumber = Integer.toString(random.nextInt(899999999) + 100000000) ;
-        do{
+
+        do {
+            phoneNumber = Integer.toString(random.nextInt(899999999) + 100000000);
+        } while (UserRepository.existsWithPhoneNumber(phoneNumber));
+
+        do {
             userAge = (int) ageNormalDistribution.sample();
-        }while(userAge < 19 || userAge > 80);
+        } while (userAge < 19 || userAge > 80);
 
         UserType userType = UserType.getUserType(typeUniformDistribution.sample());
         UserGender userGender = UserGender.getGender(genderUniformDistribution.sample());

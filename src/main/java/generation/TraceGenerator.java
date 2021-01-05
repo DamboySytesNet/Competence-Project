@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 public class TraceGenerator {
     private List<UserTraceInformation> users;
@@ -65,7 +66,7 @@ public class TraceGenerator {
         return ChronoUnit.MINUTES.between(this.lastStepTime, currentTime);
     }
 
-    public List<Trace> generateTraces(LocalDateTime time) {
+    public List<Trace> generateTraces(LocalDateTime time, UUID experimentId) {
         long timeStep = this.calcTimeStep(time);
         List<Trace> traces = new LinkedList<>();
 
@@ -86,10 +87,12 @@ public class TraceGenerator {
                     // generate trace from data
                     LocalDateTime exitTime = time.plusMinutes(waitingTime);
                     Trace newTrace = new Trace(
+                            UUID.randomUUID(),
                             userTraceInformation.getUser(),
                             userTraceInformation.getNewPOI(),
                             time,
-                            exitTime);
+                            exitTime,
+                            experimentId);
 
                     traces.add(newTrace);
                 } else {
