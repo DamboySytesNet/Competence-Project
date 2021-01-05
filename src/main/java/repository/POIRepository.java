@@ -14,7 +14,7 @@ import java.util.UUID;
 
 import static connectors.JavaDatabaseConnector.getConnection;
 
-public class POIRepository implements RepositorySaver<POI>{
+public class POIRepository implements RepositorySaver<POI> {
 
     public static POI getById(UUID id) throws SQLException {
         Connection connection = getConnection();
@@ -24,6 +24,23 @@ public class POIRepository implements RepositorySaver<POI>{
         ResultSet resultSet = statement.executeQuery();
         resultSet.next();
         POI poi = mapResultSetToPOI(resultSet);
+
+        connection.close();
+        return poi;
+    }
+
+    public POI getById(String id) throws SQLException {
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM `competence-schema`.`poi` WHERE id=?");
+        statement.setString(1, id);
+        ResultSet resultSet = statement.executeQuery();
+        resultSet.next();
+        POI poi = POI.builder().id(UUID.fromString(id)).description(resultSet.getString("description"))
+                .experimentId(resultSet.getString("experiment_id"))
+                .geolocalization(new Geolocalization(resultSet.getDouble("x"),
+                        resultSet.getDouble("y")))
+                .name(resultSet.getString("name"))
+                .type(POIType.valueOf(resultSet.getString("type"))).build();
 
         connection.close();
         return poi;
@@ -43,10 +60,13 @@ public class POIRepository implements RepositorySaver<POI>{
 
     public static boolean save(POI poi) throws SQLException {
         Connection connection = getConnection();
+
+        String poiID = poi.getId() == null ? UUID.randomUUID().toString() : poi.getId().toString();
+
         PreparedStatement statement = connection.prepareStatement(
                 "INSERT INTO `competence-schema`.`poi` (id, name, description, x, y, type, experiment_id)"
                         + " VALUES (?, ?, ?, ?, ?, ?, ?)");
-        statement.setString(1, poi.getId().toString());
+        statement.setString(1, poiID);
         statement.setString(2, poi.getName());
         statement.setString(3, poi.getDescription());
         statement.setDouble(4, poi.getGeolocalization().getLatitude());
@@ -84,10 +104,11 @@ public class POIRepository implements RepositorySaver<POI>{
 
     /**
      * Creates string made of POI's fields separated by ", ";
+     *
      * @param poi with all fields set
      * @return string made of POI's fields
      */
-    private static String getPOIValuesString (POI poi) {
+    private static String getPOIValuesString(POI poi) {
         StringBuilder sb = new StringBuilder();
         sb.append("'");
         sb.append(poi.getId().toString());
@@ -139,7 +160,7 @@ public class POIRepository implements RepositorySaver<POI>{
                 "DELETE FROM `competence-schema`.`poi` WHERE name=?");
         statement.setString(1, name);
 
-        boolean isFinished =  statement.executeUpdate() > 0;
+        boolean isFinished = statement.executeUpdate() > 0;
         connection.close();
         return isFinished;
     }

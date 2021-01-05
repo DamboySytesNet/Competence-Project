@@ -180,10 +180,8 @@ public class StatisticsMenu implements Menu {
                 System.out.println(statistics.getMostPopularPOIText(poiId.toString()));
                 break;
             case exit:
-                parent.execute();
+                break;
         }
-
-        parent.execute();
     }
 
     private UUID chooseUser(List<User> users) {
@@ -197,6 +195,7 @@ public class StatisticsMenu implements Menu {
         int whichUser;
         do {
             whichUser = scanner.nextInt();
+            scanner.nextLine();
         } while (whichUser < 0 || whichUser >= i);
 
         return users.get(whichUser).getUserID();
@@ -213,6 +212,7 @@ public class StatisticsMenu implements Menu {
         int whichPOI;
         do {
             whichPOI = scanner.nextInt();
+            scanner.nextLine();
         } while (whichPOI < 0 || whichPOI >= i);
 
         return POIs.get(whichPOI).getId();

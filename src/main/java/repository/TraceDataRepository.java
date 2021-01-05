@@ -5,6 +5,7 @@ import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
 import model.TraceData;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -37,7 +38,7 @@ public class TraceDataRepository {
                 .append("creation_time timestamp,")
                 .append("previous_trace_id uuid,")
                 .append("experiment_id uuid,")
-                .append("PRIMARY KEY (id, experiment_id));");
+                .append("PRIMARY KEY (id, entry_time, experiment_id));");
         session.execute(sb.toString());
     }
 
@@ -174,6 +175,30 @@ public class TraceDataRepository {
 
         ResultSet rs = session.execute(sb.toString());
         return rs.one().getLong(0);
+    }
+
+
+    public List<TraceData> getDailyTraces(LocalDate date){
+        StringBuilder sb = new StringBuilder("SELECT * FROM ")
+                .append(TABLE_NAME)
+                .append(" WHERE entry_time >= '")
+                .append(date.toString())
+                .append("' AND entry_time < '")
+                .append(date.plusDays(1).toString())
+                .append("' ALLOW FILTERING")
+                .append(";");
+
+        ResultSet rs = session.execute(sb.toString());
+        List<Row> rows = Stream.iterate(rs.one(), Objects::nonNull, row -> rs.one())
+                .collect(Collectors.toList());
+
+        return rows.stream()
+                .map(this::mapRowToTraceData)
+                .collect(Collectors.toList());
+    }
+
+    public List<TraceData> getTracesForToday(){
+        return getDailyTraces(LocalDate.now());
     }
 
     public long getTotalNumberOfTracesByExperimentId(UUID id) {

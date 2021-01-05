@@ -50,4 +50,12 @@ public class TraceDataMapper {
         }
         return tracesData;
     }
+
+    public static List<Trace> mapTraceDataToTraces(List<TraceData> traces){
+        List<Trace> tracesData = new ArrayList<>();
+        for(TraceData traceData : traces){
+            tracesData.add(mapTraceDataToTrace(traceData));
+        }
+        return tracesData;
+    }
 }

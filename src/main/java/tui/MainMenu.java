@@ -1,6 +1,7 @@
 package tui;
 
 import tui.example.FooMenu;
+import tui.menus.ClusteringMenu;
 import tui.menus.StatisticsMenu;
 
 import java.util.Arrays;
@@ -11,15 +12,17 @@ import java.util.Scanner;
 
 public class MainMenu implements Menu {
     private final Scanner scanner;
-    private final FooMenu exampleSubmenu;
     private final StatisticsMenu statisticsMenu;
     private final GenerationMenu generationMenu;
+    private final ClusteringMenu clusteringMenu;
+    private final RankingMenu rankingMenu;
 
     public MainMenu(Scanner scanner) {
         this.scanner = scanner;
-        this.exampleSubmenu = new FooMenu(this, scanner);
         this.statisticsMenu = new StatisticsMenu(this, scanner);
         this.generationMenu = new GenerationMenu(this, scanner);
+        this.clusteringMenu = new ClusteringMenu(this, scanner, this.generationMenu.getTraceRepository());
+        this.rankingMenu = new RankingMenu(this, scanner);
     }
 
     @Override
@@ -33,18 +36,24 @@ public class MainMenu implements Menu {
         String input = scanner.nextLine();
         switch (Choose.getChoose(input)) {
             case generateAndSave:
-                this.generationMenu.execute();
-                this.execute();
+                generationMenu.execute();
+                break;
             case statistics:
                 statisticsMenu.execute();
-                this.execute();
+                break;
             case ranking:
+                rankingMenu.execute();
+                break;
             case clustering:
+                clusteringMenu.execute();
+                break;
             case exit:
                 System.exit(0);
             case mainMenu:
-                execute();
+                break;
         }
+
+        execute();
     }
 
     enum Choose {
