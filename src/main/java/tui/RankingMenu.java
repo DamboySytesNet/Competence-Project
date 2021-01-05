@@ -34,8 +34,6 @@ public class RankingMenu implements Menu{
 
 
         this.traceRepository = new TraceDataRepository(connector.getSession());
-
-        traceRepository.createTable();
     }
 
     public void createRanking(String title, HashMap<POI, Integer> rank){
