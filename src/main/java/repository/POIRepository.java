@@ -14,7 +14,7 @@ import java.util.UUID;
 
 import static connectors.JavaDatabaseConnector.getConnection;
 
-public class POIRepository implements RepositorySaver<POI>{
+public class POIRepository implements RepositorySaver<POI> {
 
     public static POI getById(UUID id) throws SQLException {
         Connection connection = getConnection();
@@ -35,7 +35,7 @@ public class POIRepository implements RepositorySaver<POI>{
         statement.setString(1, id);
         ResultSet resultSet = statement.executeQuery();
         resultSet.next();
-        POI poi = POI.builder().description(resultSet.getString("description"))
+        POI poi = POI.builder().id(UUID.fromString(id)).description(resultSet.getString("description"))
                 .experimentId(resultSet.getString("experiment_id"))
                 .geolocalization(new Geolocalization(resultSet.getDouble("x"),
                         resultSet.getDouble("y")))
@@ -104,10 +104,11 @@ public class POIRepository implements RepositorySaver<POI>{
 
     /**
      * Creates string made of POI's fields separated by ", ";
+     *
      * @param poi with all fields set
      * @return string made of POI's fields
      */
-    private static String getPOIValuesString (POI poi) {
+    private static String getPOIValuesString(POI poi) {
         StringBuilder sb = new StringBuilder();
         sb.append("'");
         sb.append(poi.getId().toString());
@@ -159,7 +160,7 @@ public class POIRepository implements RepositorySaver<POI>{
                 "DELETE FROM `competence-schema`.`poi` WHERE name=?");
         statement.setString(1, name);
 
-        boolean isFinished =  statement.executeUpdate() > 0;
+        boolean isFinished = statement.executeUpdate() > 0;
         connection.close();
         return isFinished;
     }
