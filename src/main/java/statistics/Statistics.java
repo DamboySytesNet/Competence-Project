@@ -9,6 +9,8 @@ import model.User;
 
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Getter
 public class Statistics {
@@ -16,14 +18,55 @@ public class Statistics {
     private final Map<User, Pair<Trace, Double>> longestRoutePerUser = new HashMap<>();
     private final List<POIPopularity> poiPopularityList = new LinkedList<>();
 
-    public String getLengthOfStayText(User user, POI poi) {
-        StringBuilder sb = new StringBuilder("I (" + user.getUserID() + ") have no route");
+    private User getUserById(String userId, Set<User> userSet) {
+        UUID userUUID;
 
-        if (lengthOfStayPerUserPerPOI.containsKey(user)) {
-            Map<POI, Double> POIStayLength = lengthOfStayPerUserPerPOI.get(user);
-            if (POIStayLength.containsKey(poi)) {
+        try {
+            userUUID = UUID.fromString(userId);
+        } catch(IllegalArgumentException e) {
+            return null;
+        }
+
+        for (User u : userSet) {
+            if (u.getUserID().equals(userUUID)) {
+                return u;
+            }
+        }
+
+        return null;
+    }
+
+    private POI getPOIById(String poiID, Set<POI> poiSet) {
+        UUID poiUUID;
+        try {
+            poiUUID = UUID.fromString(poiID);
+        } catch(IllegalArgumentException e) {
+            return null;
+        }
+
+        for (POI poi : poiSet) {
+            if (poi.getId().equals(poiUUID)) {
+                return poi;
+            }
+        }
+
+        return null;
+    }
+
+    public String getLengthOfStayText(String userId, String poiId) {
+        User user = getUserById(userId, lengthOfStayPerUserPerPOI.keySet());
+        StringBuilder sb = new StringBuilder("User was not included before");
+
+        if (user != null) {
+            POI poi = getPOIById(poiId, lengthOfStayPerUserPerPOI.get(user).keySet());
+            sb.delete(0, sb.length());
+            sb.append("POI was not included before");
+
+            if (poi != null) {
+                Map<POI, Double> POIStayLength = lengthOfStayPerUserPerPOI.get(user);
                 sb.delete(0, sb.length());
-                sb.append("I (" + user.getUserID() + ") was here (" + poi.getId() + ") for ").append(POIStayLength.get(poi)).append(" minutes");
+                sb.append("I (").append(user.getUserID()).append(") was here (").append(poi.getId()).append(") for ")
+                    .append(POIStayLength.get(poi)).append(" minutes");
             }
         }
 
@@ -41,10 +84,11 @@ public class Statistics {
         return 0.0;
     }
 
-    public String getLongestRouteText(User user) {
-        StringBuilder sb = new StringBuilder("I (" + user.getUserID() + ") have no route");
+    public String getLongestRouteText(String userId) {
+        User user = getUserById(userId, longestRoutePerUser.keySet());
+        StringBuilder sb = new StringBuilder("User was not included before");
 
-        if (longestRoutePerUser.containsKey(user)) {
+        if (user != null) {
             sb.delete(0, sb.length());
             sb.append("My (")
                 .append(user.getUserID())
@@ -63,23 +107,31 @@ public class Statistics {
         return 0.0;
     }
 
-    public String getMostPopularPOIText(POI searchedPOI) {
-        StringBuilder sb = new StringBuilder("I did not visit anything from POI " + searchedPOI.getId());
+    public String getMostPopularPOIText(String searchedPOIId) {
+        Set<POI> poiSet = poiPopularityList.stream().map(POIPopularity::getOldPOI).collect(Collectors.toSet());
 
-        for (POIPopularity poiPopularity : poiPopularityList) {
-            if (poiPopularity.oldPOI.getId() == searchedPOI.getId()) {
-                sb.delete(0, sb.length());
-                sb.append("Most visited POIs from ").append(searchedPOI.getId()).append(": \n");
-                int max = poiPopularity.getMaxVisits();
-                for (POI poi : poiPopularity.popularityCounter.keySet()) {
-                    if (poiPopularity.popularityCounter.get(poi) == max) {
-                        sb.append(poi.getId()).append("\n");
+        POI searchedPOI = getPOIById(searchedPOIId, poiSet);
+
+        StringBuilder sb = new StringBuilder("POI was not included before");
+        if (searchedPOI != null) {
+            sb.delete(0, sb.length());
+            sb.append("I did not visit anything from POI " + searchedPOI.getId());
+
+            for (POIPopularity poiPopularity : poiPopularityList) {
+                if (poiPopularity.oldPOI.getId() == searchedPOI.getId()) {
+                    sb.delete(0, sb.length());
+                    sb.append("Most visited POIs from ").append(searchedPOI.getId()).append(": \n");
+                    int max = poiPopularity.getMaxVisits();
+                    for (POI poi : poiPopularity.popularityCounter.keySet()) {
+                        if (poiPopularity.popularityCounter.get(poi) == max) {
+                            sb.append(poi.getId()).append("\n");
+                        }
                     }
+
+                    sb.append("with ").append(max).append(" visits");
+
+                    break;
                 }
-
-                sb.append("with ").append(max).append(" visits");
-
-                break;
             }
         }
 
@@ -236,6 +288,7 @@ public class Statistics {
 
     @AllArgsConstructor
     private static class POIPopularity {
+        @Getter
         private final POI oldPOI;
         private final Map<POI, Integer> popularityCounter;
 

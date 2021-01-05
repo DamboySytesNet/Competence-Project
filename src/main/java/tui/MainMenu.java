@@ -1,6 +1,7 @@
 package tui;
 
 import tui.example.FooMenu;
+import tui.menus.StatisticsMenu;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -11,12 +12,14 @@ import java.util.Scanner;
 public class MainMenu implements Menu {
     private final Scanner scanner;
     private final FooMenu exampleSubmenu;
+    private final StatisticsMenu statisticsMenu;
     private final GenerationMenu generationMenu;
     private final RankingMenu rankingMenu;
 
     public MainMenu(Scanner scanner) {
         this.scanner = scanner;
         this.exampleSubmenu = new FooMenu(this, scanner);
+        this.statisticsMenu = new StatisticsMenu(this, scanner);
         this.generationMenu = new GenerationMenu(this, scanner);
         this.rankingMenu = new RankingMenu(this, scanner);
     }
@@ -37,6 +40,8 @@ public class MainMenu implements Menu {
                 this.generationMenu.execute();
                 break;
             case statistics:
+                statisticsMenu.execute();
+                break;
             case ranking:
                 this.rankingMenu.execute();
                 break;
