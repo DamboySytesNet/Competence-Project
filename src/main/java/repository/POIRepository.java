@@ -16,18 +16,6 @@ import static connectors.JavaDatabaseConnector.getConnection;
 
 public class POIRepository implements RepositorySaver<POI>{
 
-    public static POI getByName(String name) throws SQLException {
-        Connection connection = getConnection();
-        PreparedStatement statement = connection.prepareStatement(
-                "SELECT * FROM `competence-schema`.`poi` WHERE name=?");
-        statement.setString(1, name);
-        ResultSet resultSet = statement.executeQuery();
-        resultSet.next();
-        POI poi = mapResultSetToPOI(resultSet);
-        connection.close();
-        return poi;
-    }
-
     public static POI getById(UUID id) throws SQLException {
         Connection connection = getConnection();
         PreparedStatement statement = connection.prepareStatement(

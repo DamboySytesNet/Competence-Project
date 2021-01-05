@@ -38,7 +38,6 @@ public class TraceDataRepository {
                 .append("creation_time timestamp,")
                 .append("previous_trace_id uuid,")
                 .append("PRIMARY KEY (id, entry_time));");
-                .append("PRIMARY KEY (id));");
         session.execute(sb.toString());
     }
 
@@ -54,7 +53,7 @@ public class TraceDataRepository {
 
         StringBuilder sb = new StringBuilder("INSERT INTO ")
                 .append(TABLE_NAME)
-                .append("(id, user_id, point_of_interest_id, entry_time, exit_time, previous_trace_id) ")
+                .append("(id, user_id, point_of_interest_id, entry_time, exit_time, previous_trace_id, experiment_id) ")
                 .append("VALUES (")
                 .append(traceData.getId().toString())
                 .append(", ")
@@ -67,6 +66,8 @@ public class TraceDataRepository {
                 .append(traceData.getExitTime().toInstant(offset).toEpochMilli())
                 .append(", ")
                 .append(traceData.getPreviousTraceId() == null ? "null" : traceData.getPreviousTraceId().toString())
+                .append(", ")
+                .append(traceData.getExperimentId().toString())
                 .append(");");
 
         session.execute(sb.toString());
@@ -80,7 +81,7 @@ public class TraceDataRepository {
         for (TraceData traceData: traceDataList) {
             sb.append(" INSERT INTO ")
                     .append(TABLE_NAME)
-                    .append("(id, user_id, point_of_interest_id, entry_time, exit_time, previous_trace_id) ")
+                    .append("(id, user_id, point_of_interest_id, entry_time, exit_time, previous_trace_id, experiment_id) ")
                     .append("VALUES (")
                     .append(traceData.getId().toString())
                     .append(", ")
@@ -93,6 +94,8 @@ public class TraceDataRepository {
                     .append(traceData.getExitTime().toInstant(offset).toEpochMilli())
                     .append(", ")
                     .append(traceData.getPreviousTraceId() == null ? "null" : traceData.getPreviousTraceId().toString())
+                    .append(", ")
+                    .append(traceData.getExperimentId())
                     .append(");");
         }
         sb.append(" APPLY BATCH;");
@@ -146,6 +149,24 @@ public class TraceDataRepository {
                 .collect(Collectors.toList());
     }
 
+    public List<TraceData> getTracesByExperimentId(UUID experimentId) {
+        StringBuilder sb = new StringBuilder("SELECT * FROM ");
+        sb.append(TABLE_NAME);
+        sb.append(" WHERE experiment_id=");
+        sb.append(experimentId.toString());
+        sb.append(";");
+
+        final String query = sb.toString();
+        ResultSet rs = session.execute(query);
+
+        List<Row> rows = Stream.iterate(rs.one(), Objects::nonNull, row -> rs.one())
+                .collect(Collectors.toList());
+
+        return rows.stream()
+                .map(this::mapRowToTraceData)
+                .collect(Collectors.toList());
+    }
+
     public long getTotalNumberOfTraces() {
         StringBuilder sb = new StringBuilder("SELECT COUNT(*) FROM ")
                 .append(TABLE_NAME)
@@ -154,6 +175,7 @@ public class TraceDataRepository {
         ResultSet rs = session.execute(sb.toString());
         return rs.one().getLong(0);
     }
+
 
     public List<TraceData> getDailyTraces(LocalDate date){
         StringBuilder sb = new StringBuilder("SELECT * FROM ")
@@ -178,6 +200,17 @@ public class TraceDataRepository {
         return getDailyTraces(LocalDate.now());
     }
 
+    public long getTotalNumberOfTracesByExperimentId(UUID id) {
+        StringBuilder sb = new StringBuilder("SELECT COUNT(*) FROM ")
+                .append(TABLE_NAME)
+                .append(" WHERE experiment_id=")
+                .append(id.toString())
+                .append(";");
+
+        ResultSet rs = session.execute(sb.toString());
+        return rs.one().getLong(0);
+    }
+
     private TraceData mapRowToTraceData(Row r) {
         return TraceData.builder()
                 .id(r.getUUID("id"))
@@ -190,6 +223,7 @@ public class TraceDataRepository {
                         .atZone(ZoneId.systemDefault())
                         .toLocalDateTime())
                 .previousTraceId(r.getUUID("previous_trace_id"))
+                .experimentId(r.getUUID("experiment_id"))
                 .build();
     }
 }

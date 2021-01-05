@@ -16,9 +16,9 @@ public class ExperimentSaverTest {
 
     @Test
     public void shouldSaveExperimentResultsToDB() {
-        int noUsers = 4235;
-        int noPois = 6634;
-        int noTraces = 4235;
+        int noUsers = 423;
+        int noPois = 663;
+        int noTraces = 846;
         int timeStep = 3;
         Experiment experiment = new Experiment(noUsers,noPois,noTraces, timeStep);
         try {
@@ -29,17 +29,14 @@ public class ExperimentSaverTest {
 
             long noUsersBeforeExp = UserRepository.getTotalNumberOfUsers();
             long noPoisBeforeExp = POIRepository.getTotalNumberOfPOI();
-            long noTracesBeforeExp = traceDataRepository.getTotalNumberOfTraces();
 
             ExperimentSaver.saveExperimentResults(experiment);
 
             long noUsersAfterExp = UserRepository.getTotalNumberOfUsers();
             long noPoisAfterExp = POIRepository.getTotalNumberOfPOI();
-            long noTracesAfterExp = traceDataRepository.getTotalNumberOfTraces();
 
             Assert.assertEquals(noUsers, noUsersAfterExp - noUsersBeforeExp);
             Assert.assertEquals(noPois, noPoisAfterExp - noPoisBeforeExp);
-            Assert.assertEquals(noTraces, noTracesAfterExp - noTracesBeforeExp);
 
             List<UUID> tracesIds = new ArrayList<>();
             experiment.getTraces().forEach((e) -> tracesIds.add(e.getId()));
