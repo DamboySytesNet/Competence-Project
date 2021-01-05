@@ -34,6 +34,23 @@ public class POIRepository {
         return poi;
     }
 
+    public POI getById(String id) throws SQLException {
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM `competence-schema`.`poi` WHERE id=?");
+        statement.setString(1, id);
+        ResultSet resultSet = statement.executeQuery();
+        resultSet.next();
+        POI poi = POI.builder().description(resultSet.getString("description"))
+                .experimentId(resultSet.getString("experiment_id"))
+                .geolocalization(new Geolocalization(resultSet.getDouble("x"),
+                        resultSet.getDouble("y")))
+                .name(resultSet.getString("name"))
+                .type(POIType.valueOf(resultSet.getString("type"))).build();
+
+        connection.close();
+        return poi;
+    }
+
     public List<POI> getAll() throws SQLException {
         Connection connection = getConnection();
         ResultSet resultSet = connection.createStatement().executeQuery("SELECT * FROM `competence-schema`.`poi`");
@@ -52,9 +69,12 @@ public class POIRepository {
 
     public boolean save(POI poi) throws SQLException {
         Connection connection = getConnection();
+
+        String poiID = poi.getId() == null ? UUID.randomUUID().toString() : poi.getId().toString();
+
         PreparedStatement statement = connection.prepareStatement(
                 "INSERT INTO `competence-schema`.`poi` (id, name, description, x, y, type, experiment_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        statement.setString(1, UUID.randomUUID().toString());
+        statement.setString(1, poiID);
         statement.setString(2, poi.getName());
         statement.setString(3, poi.getDescription());
         statement.setDouble(4, poi.getGeolocalization().getLatitude());

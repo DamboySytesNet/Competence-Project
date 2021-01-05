@@ -2,6 +2,7 @@ package tui;
 
 import connectors.CassandraConnector;
 import generation.Experiment;
+import lombok.Getter;
 import model.POI;
 import model.Trace;
 import model.TraceData;
@@ -21,6 +22,7 @@ public class GenerationMenu implements Menu{
     private final Menu mainMenu;
     private final UserRepository userRepository;
     private final POIRepository poiRepository;
+    @Getter
     private final TraceRepository traceRepository;
 
     public GenerationMenu(MainMenu mainMenu, Scanner scanner) {
