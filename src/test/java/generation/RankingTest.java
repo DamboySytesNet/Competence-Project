@@ -1,12 +1,13 @@
 package generation;
 
-import ranking.POIRanking;
 import model.POI;
 import model.Trace;
 import model.User;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import ranking.POIRanking;
+import repository.ExperimentRepository;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -43,7 +44,7 @@ public class RankingTest {
         //gen Traces
         do {
             currentTime = currentTime.plusMinutes(this.timeStep);
-            traces.addAll(this.traceGenerator.generateTraces(currentTime));
+            traces.addAll(this.traceGenerator.generateTraces(currentTime, ExperimentRepository.DEFAULT_ID));
         } while (traces.size() < 100);
     }
 

@@ -1,7 +1,5 @@
 package cluster;
 
-import cluster.clusterable.POIWrapper;
-import model.POI;
 import org.apache.commons.math3.ml.clustering.CentroidCluster;
 import org.apache.commons.math3.ml.clustering.Clusterable;
 import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
