@@ -52,7 +52,7 @@ public class Experiment {
         this.traceGenerator = new TraceGenerator(users, pois, currentTime);
         do {
             this.currentTime = currentTime.plusMinutes(this.timeStep);
-            traces.addAll(traceGenerator.generateTraces(currentTime, ExperimentRepository.DEFAULT_ID));
+            traces.addAll(traceGenerator.generateTraces(currentTime, expId));
         } while (traces.size() < noTraces);
     }
 }

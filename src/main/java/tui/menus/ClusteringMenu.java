@@ -100,8 +100,6 @@ public class ClusteringMenu implements Menu {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        parent.execute();
     }
 
     private void printChart(String[] args, List<POI> pois) {

@@ -12,7 +12,6 @@ import java.util.Scanner;
 
 public class MainMenu implements Menu {
     private final Scanner scanner;
-    private final FooMenu exampleSubmenu;
     private final StatisticsMenu statisticsMenu;
     private final GenerationMenu generationMenu;
     private final ClusteringMenu clusteringMenu;
@@ -20,10 +19,8 @@ public class MainMenu implements Menu {
 
     public MainMenu(Scanner scanner) {
         this.scanner = scanner;
-        this.exampleSubmenu = new FooMenu(this, scanner);
         this.statisticsMenu = new StatisticsMenu(this, scanner);
         this.generationMenu = new GenerationMenu(this, scanner);
-        this.statisticsMenu = new StatisticsMenu(this, scanner);
         this.clusteringMenu = new ClusteringMenu(this, scanner, this.generationMenu.getTraceRepository());
         this.rankingMenu = new RankingMenu(this, scanner);
     }
@@ -34,32 +31,29 @@ public class MainMenu implements Menu {
         System.out.println("[2] - Statistics");
         System.out.println("[3] - Ranking");
         System.out.println("[4] - Clustering");
-        System.out.println("[5] - Neural network");
-        System.out.println("[9] - Options");
         System.out.println("[0] - Exit");
 
         String input = scanner.nextLine();
         switch (Choose.getChoose(input)) {
             case generateAndSave:
-                this.generationMenu.execute();
+                generationMenu.execute();
                 break;
             case statistics:
                 statisticsMenu.execute();
                 break;
             case ranking:
-                this.rankingMenu.execute();
+                rankingMenu.execute();
                 break;
             case clustering:
                 clusteringMenu.execute();
                 break;
-            case neuralNetwork:
-            case options:
-                exampleSubmenu.execute();
             case exit:
                 System.exit(0);
             case mainMenu:
-                execute();
+                break;
         }
+
+        execute();
     }
 
     enum Choose {
@@ -67,8 +61,6 @@ public class MainMenu implements Menu {
         statistics("2"),
         ranking("3"),
         clustering("4"),
-        neuralNetwork("5"),
-        options("9"),
         exit("0", "exit"),
         mainMenu; // default
 

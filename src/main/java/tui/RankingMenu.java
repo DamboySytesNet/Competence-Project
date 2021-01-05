@@ -95,8 +95,7 @@ public class RankingMenu implements Menu{
                 createRanking("Ranking based on time spent in POI (Descending)",POIRanking.generateTimeSpentRanking(traces, true));
                 break;
             case none:
-                mainMenu.execute();
-
+                break;
         }
     }
 
@@ -105,7 +104,7 @@ public class RankingMenu implements Menu{
         usersVisitsDescending("2"),
         timeSpentAscending("3"),
         timeSpentDescending("4"),
-        none();
+        none;
 
         Choose(String... names) {
             this.names = names;

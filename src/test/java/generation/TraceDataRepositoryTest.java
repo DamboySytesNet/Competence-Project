@@ -82,17 +82,17 @@ public class TraceDataRepositoryTest {
                 .experimentId(ExperimentRepository.DEFAULT_ID)
                 .build();
 
-        traceRepository.insertTraces(Arrays.asList(thirdTraceData, fourthTraceData));
+        traceDataRepository.insertTraces(Arrays.asList(thirdTraceData, fourthTraceData));
 
-        TraceData savedThirdData = traceRepository.getTraceById(thirdTraceData.getId());
+        TraceData savedThirdData = traceDataRepository.getTraceById(thirdTraceData.getId());
 
         assertTracesEquals(thirdTraceData, savedThirdData);
 
-        TraceData savedFourthData = traceRepository.getTraceById(fourthTraceData.getId());
+        TraceData savedFourthData = traceDataRepository.getTraceById(fourthTraceData.getId());
 
         assertTracesEquals(fourthTraceData, savedFourthData);
 
-        traceRepository.deleteTraces(Arrays.asList(secondTraceData.getId(), thirdTraceData.getId(), fourthTraceData.getId()));
+        traceDataRepository.deleteTraces(Arrays.asList(secondTraceData.getId(), thirdTraceData.getId(), fourthTraceData.getId()));
 
         connector.close();
     }

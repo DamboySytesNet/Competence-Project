@@ -37,7 +37,8 @@ public class TraceDataRepository {
                 .append("exit_time timestamp,")
                 .append("creation_time timestamp,")
                 .append("previous_trace_id uuid,")
-                .append("PRIMARY KEY (id, entry_time));");
+                .append("experiment_id uuid,")
+                .append("PRIMARY KEY (id, entry_time, experiment_id));");
         session.execute(sb.toString());
     }
 
@@ -154,7 +155,7 @@ public class TraceDataRepository {
         sb.append(TABLE_NAME);
         sb.append(" WHERE experiment_id=");
         sb.append(experimentId.toString());
-        sb.append(";");
+        sb.append(" ALLOW FILTERING;");
 
         final String query = sb.toString();
         ResultSet rs = session.execute(query);
@@ -205,7 +206,7 @@ public class TraceDataRepository {
                 .append(TABLE_NAME)
                 .append(" WHERE experiment_id=")
                 .append(id.toString())
-                .append(";");
+                .append(" ALLOW FILTERING;");
 
         ResultSet rs = session.execute(sb.toString());
         return rs.one().getLong(0);

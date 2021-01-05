@@ -77,6 +77,5 @@ public class GenerationMenu implements Menu{
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        this.mainMenu.execute();
     }
 }
