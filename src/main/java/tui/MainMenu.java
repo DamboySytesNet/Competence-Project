@@ -28,23 +28,18 @@ public class MainMenu implements Menu {
         System.out.println("[2] - Statistics");
         System.out.println("[3] - Ranking");
         System.out.println("[4] - Clustering");
-        System.out.println("[5] - Neural network");
-        System.out.println("[9] - Options");
         System.out.println("[0] - Exit");
 
         String input = scanner.nextLine();
         switch (Choose.getChoose(input)) {
             case generateAndSave:
                 this.generationMenu.execute();
-                break;
+                this.execute();
             case statistics:
                 statisticsMenu.execute();
-                break;
+                this.execute();
             case ranking:
             case clustering:
-            case neuralNetwork:
-            case options:
-                exampleSubmenu.execute();
             case exit:
                 System.exit(0);
             case mainMenu:
@@ -57,8 +52,6 @@ public class MainMenu implements Menu {
         statistics("2"),
         ranking("3"),
         clustering("4"),
-        neuralNetwork("5"),
-        options("9"),
         exit("0", "exit"),
         mainMenu; // default
 

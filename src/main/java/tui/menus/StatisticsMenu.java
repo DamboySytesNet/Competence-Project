@@ -44,26 +44,25 @@ public class StatisticsMenu implements Menu {
         try {
             experiments = ExperimentRepository.getAllIds();
         } catch (SQLException sqlException) {
-            parent.execute();
             return;
         }
 
         System.out.println("Choose experiment: ");
-
         int i = 0;
         for (Pair<UUID, Long> experiment : experiments) {
-            StringBuilder sb = new StringBuilder("[");
-            sb.append(i);
-            sb.append("] Experiment with ");
-            sb.append(experiment.getValue());
-            sb.append(" traces");
+            String sb = "[" + i +
+                "] Experiment (" + experiment.getKey() + ") with " +
+                experiment.getValue() +
+                " traces";
 
+            System.out.println(sb);
             i++;
         }
 
         int whichExperiment;
         do {
             whichExperiment = scanner.nextInt();
+            scanner.nextLine();
         } while (whichExperiment < 0 || whichExperiment >= i);
 
         UUID experimentUUID = experiments.get(whichExperiment).getKey();
@@ -81,11 +80,20 @@ public class StatisticsMenu implements Menu {
             .collect(Collectors.groupingBy(t -> t.getUser().getUserID()));
 
         // List users
-        List<User> users = new LinkedList<>();
+        List<User> users;
         try {
             users = UserRepository.getAll();
         } catch (SQLException sqlException) {
-            sqlException.printStackTrace();
+            return;
+        }
+
+        users = users.stream()
+            .filter(user -> user.getExperimentId().equals(experimentUUID.toString()))
+            .collect(Collectors.toList());
+
+        if (users.size() == 0) {
+            System.out.println("No users found");
+            return;
         }
 
         // List POIs
@@ -93,9 +101,17 @@ public class StatisticsMenu implements Menu {
         try {
             pois = POIRepository.getAll();
         } catch (SQLException sqlException) {
-            parent.execute();
             return;
         }
+
+        if (pois.size() == 0) {
+            System.out.println("No POIs found");
+            return;
+        }
+
+        pois = pois.stream()
+            .filter(poi -> poi.getExperimentId().equals(experimentUUID.toString()))
+            .collect(Collectors.toList());
 
         System.out.println("[1] - Get length of stay");
         System.out.println("[2] - Get longest route");
@@ -105,7 +121,7 @@ public class StatisticsMenu implements Menu {
         UUID userId;
         UUID poiId;
         List<Trace> userTraces;
-        Trace oldTrace = null;
+        Trace oldTrace;
 
         String input = scanner.nextLine();
         switch (Choice.getChoice(input)) {
@@ -120,9 +136,9 @@ public class StatisticsMenu implements Menu {
 
                 // Add traces to statistics
                 oldTrace = null;
-                for (int j = 0; j < userTraces.size(); j++) {
-                    statistics.addNewTrace(userTraces.get(j), oldTrace);
-                    oldTrace = userTraces.get(j);
+                for (Trace userTrace : userTraces) {
+                    statistics.addNewTrace(userTrace, oldTrace);
+                    oldTrace = userTrace;
                 }
 
                 System.out.println(statistics.getLengthOfStayText(userId.toString(), poiId.toString()));
@@ -134,8 +150,6 @@ public class StatisticsMenu implements Menu {
                 userTraces = usersTraces.get(userId).stream()
                     .sorted(Comparator.comparing(Trace::getEntryTime))
                     .collect(Collectors.toList());
-                ;
-
 
                 // Add traces to statistics
                 oldTrace = null;
@@ -167,7 +181,6 @@ public class StatisticsMenu implements Menu {
                 break;
             case exit:
                 parent.execute();
-                return;
         }
 
         parent.execute();
@@ -186,7 +199,7 @@ public class StatisticsMenu implements Menu {
             whichUser = scanner.nextInt();
         } while (whichUser < 0 || whichUser >= i);
 
-        return users.get(i).getUserID();
+        return users.get(whichUser).getUserID();
     }
 
     private UUID choosePOI(List<POI> POIs) {
@@ -202,7 +215,7 @@ public class StatisticsMenu implements Menu {
             whichPOI = scanner.nextInt();
         } while (whichPOI < 0 || whichPOI >= i);
 
-        return POIs.get(i).getId();
+        return POIs.get(whichPOI).getId();
     }
 
     enum Choice {
