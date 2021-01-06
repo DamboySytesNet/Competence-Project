@@ -1,8 +1,6 @@
-package tui;
+package tui.menus;
 
-import tui.example.FooMenu;
-import tui.menus.ClusteringMenu;
-import tui.menus.StatisticsMenu;
+import tui.Menu;
 
 import java.util.Arrays;
 import java.util.HashMap;

@@ -171,19 +171,9 @@ public class UserRepository implements RepositorySaver<User> {
         PreparedStatement statement = connection.prepareStatement(
                 "DELETE FROM `competence-schema`.`persons` WHERE id=?");
         statement.setString(1, id.toString());
+        statement.executeUpdate();
 
-        boolean isFinished = statement.executeUpdate() > 0;
-
-        if (!isFinished) {
-            return false;
-        }
-
-        PreparedStatement phoneStatement = connection.prepareStatement(
-                "DELETE FROM `competence-schema`.`fake_phones` WHERE fake_phone_number=?");
-        phoneStatement.setString(1, fakeNumber);
-
-        isFinished = phoneStatement.executeUpdate() > 0;
-
+        boolean isFinished = FakePhoneRepository.deleteFakePhone(fakeNumber);
         connection.close();
         return isFinished;
     }

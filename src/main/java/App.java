@@ -1,4 +1,4 @@
-import tui.MainMenu;
+import tui.menus.MainMenu;
 
 import java.util.Scanner;
 

@@ -28,4 +28,15 @@ public class FakePhoneRepository {
         connection.close();
         return fakePhoneNumber;
     }
+
+    public static boolean deleteFakePhone(String fakeNumber) throws SQLException {
+        Connection connection = getConnection();
+        PreparedStatement phoneStatement = connection.prepareStatement(
+                "DELETE FROM `competence-schema`.`fake_phones` WHERE fake_phone_number=?");
+        phoneStatement.setString(1, fakeNumber);
+
+        boolean isFinished = phoneStatement.executeUpdate() > 0;
+        connection.close();
+        return isFinished;
+    }
 }

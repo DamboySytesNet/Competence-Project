@@ -1,4 +1,4 @@
-package tui;
+package tui.menus;
 
 import connectors.CassandraConnector;
 import generation.Experiment;
@@ -8,12 +8,13 @@ import repository.KeyspaceRepository;
 import repository.POIRepository;
 import repository.TraceDataRepository;
 import repository.UserRepository;
+import tui.Menu;
 
 import java.sql.SQLException;
 import java.util.Scanner;
 import java.util.UUID;
 
-public class GenerationMenu implements Menu{
+public class GenerationMenu implements Menu {
     private final Scanner scanner;
     private final Menu mainMenu;
     private final UserRepository userRepository;

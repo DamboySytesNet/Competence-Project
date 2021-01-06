@@ -1,22 +1,20 @@
-package tui;
+package tui.menus;
 
 import connectors.CassandraConnector;
-import generation.Experiment;
-import generation.ExperimentSaver;
 import mappers.TraceDataMapper;
 import model.POI;
 import model.Trace;
-import ranking.POIDynamicRanking;
 import ranking.POIRanking;
-import repository.KeyspaceRepository;
-import repository.POIRepository;
 import repository.TraceDataRepository;
-import repository.UserRepository;
+import tui.Menu;
 
-import java.sql.SQLException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 
-public class RankingMenu implements Menu{
+public class RankingMenu implements Menu {
     private final Scanner scanner;
     private final Menu mainMenu;
     private final TraceDataRepository traceRepository;
