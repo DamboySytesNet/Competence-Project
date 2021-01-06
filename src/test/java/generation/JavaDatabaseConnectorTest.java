@@ -6,7 +6,6 @@ import model.POI;
 import model.POIType;
 import model.User;
 import model.UserGender;
-import model.UserType;
 import org.junit.Assert;
 import org.junit.Test;
 import repository.POIRepository;
@@ -43,12 +42,9 @@ public class JavaDatabaseConnectorTest {
         //given:
         String query = "SELECT * FROM `competence-schema`.`persons`";
         UserRepository userRepository = new UserRepository();
-        User stUser = User.builder().userAge(21).userGender(UserGender.female)
-                .userID(UUID.randomUUID()).userType(UserType.student).experimentId("1")
-                .phoneNumber("111222333").build();
-        User ndUser = User.builder().userAge(48).userGender(UserGender.helikopter_szturmowy)
-                .userID(UUID.randomUUID()).userType(UserType.teacher).experimentId("1")
-                .phoneNumber("111222456").build();
+        UserFactory userFactory = UserFactory.getInstance();
+        User stUser = userFactory.generate();
+        User ndUser = userFactory.generate();
 
         //when:
         long numberOfUsersBefore = UserRepository.getTotalNumberOfUsers();

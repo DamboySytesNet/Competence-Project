@@ -5,6 +5,7 @@ import model.UserGender;
 import model.UserType;
 import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.distribution.UniformIntegerDistribution;
+import repository.ExperimentRepository;
 import repository.UserRepository;
 
 import java.sql.SQLException;
@@ -29,9 +30,9 @@ public class UserFactory {
         return instance;
     }
 
-    public User generate(){
+    public User generate() {
         try {
-            return generate("");
+            return generate(ExperimentRepository.DEFAULT_ID.toString());
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
