@@ -32,18 +32,8 @@ public class RankingMenu implements Menu{
         CassandraConnector connector = new CassandraConnector();
         connector.connect();
 
-        String keyspaceName = "competence_project";
 
-        KeyspaceRepository keyspaceRepository = new KeyspaceRepository(connector.getSession());
-        keyspaceRepository.createKeyspace(
-                keyspaceName,
-                "SimpleStrategy",
-                1);
-
-        keyspaceRepository.useKeyspace(keyspaceName);
         this.traceRepository = new TraceDataRepository(connector.getSession());
-
-        traceRepository.createTable();
     }
 
     public void createRanking(String title, HashMap<POI, Integer> rank){
