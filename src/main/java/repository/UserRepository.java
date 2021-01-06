@@ -49,16 +49,21 @@ public class UserRepository implements RepositorySaver<User> {
 
     public static boolean save(User user) throws SQLException {
         Connection connection = getConnection();
+
+        String fakePhoneNumber = FakePhoneRepository.saveFromRealPhoneNumber(user.getPhoneNumber());
+        user.setPhoneNumber(fakePhoneNumber);
+
         PreparedStatement statement = connection.prepareStatement(
                 "INSERT INTO `competence-schema`.`persons` "
                         + "(id, phone_number, profile_name, experiment_id, user_gender, user_age)"
                         + " VALUES (?, ?, ?, ?, ?, ?)");
         statement.setString(1, user.getUserID().toString());
-        statement.setString(2, user.getPhoneNumber());
+        statement.setString(2, fakePhoneNumber);
         statement.setString(3, user.getUserType().toString());
         statement.setString(4, user.getExperimentId());
         statement.setString(5, user.getUserGender().name());
         statement.setInt(6, user.getUserAge());
+
         boolean isFinished = statement.executeUpdate() > 0;
         connection.close();
         return isFinished;
@@ -67,6 +72,16 @@ public class UserRepository implements RepositorySaver<User> {
     public static boolean saveAll(List<User> users) throws SQLException {
         Connection connection = getConnection();
         StringBuilder sb = new StringBuilder();
+
+        users.forEach(u -> {
+            try {
+                String fakePhoneNumber = FakePhoneRepository.saveFromRealPhoneNumber(u.getPhoneNumber());
+                u.setPhoneNumber(fakePhoneNumber);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        });
+
         sb.append("INSERT INTO `competence-schema`.`persons` "
                 + "(id, phone_number, profile_name, experiment_id, user_gender, user_age)"
                 + " VALUES ");
@@ -143,17 +158,22 @@ public class UserRepository implements RepositorySaver<User> {
         statement.setInt(5, user.getUserAge());
         statement.setString(6, user.getUserID().toString());
 
-        boolean isFinished =  statement.executeUpdate() > 0;
+        boolean isFinished = statement.executeUpdate() > 0;
         connection.close();
         return isFinished;
     }
 
     public static boolean delete(UUID id) throws SQLException {
         Connection connection = getConnection();
-        PreparedStatement statement = connection.prepareStatement("DELETE FROM `competence-schema`.`persons` WHERE id=?");
-        statement.setString(1, id.toString());
 
-        boolean isFinished =  statement.executeUpdate() > 0;
+        String fakeNumber = getById(id).getPhoneNumber();
+
+        PreparedStatement statement = connection.prepareStatement(
+                "DELETE FROM `competence-schema`.`persons` WHERE id=?");
+        statement.setString(1, id.toString());
+        statement.executeUpdate();
+
+        boolean isFinished = FakePhoneRepository.deleteFakePhone(fakeNumber);
         connection.close();
         return isFinished;
     }

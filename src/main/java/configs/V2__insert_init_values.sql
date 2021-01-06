@@ -22,6 +22,8 @@ CREATE TABLE `competence-schema`.`user_gender` (
 
 ALTER TABLE `competence-schema`.`persons` ADD FOREIGN KEY (user_gender) REFERENCES `competence-schema`.`user_gender`(`name`);
 
+ALTER TABLE `competence-schema`.`persons` ADD FOREIGN KEY (phone_number) REFERENCES `competence-schema`.`fake_phones`(`fake_phone_number`);
+
 insert into `competence-schema`.`user_gender` values('male');
 insert into `competence-schema`.`user_gender` values('female');
 insert into `competence-schema`.`user_gender` values('helikopter_szturmowy');

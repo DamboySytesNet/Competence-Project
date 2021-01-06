@@ -38,3 +38,8 @@ CREATE TABLE `competence-schema`.`poi` (
   FOREIGN KEY (`type`) REFERENCES `competence-schema`.`poi_types`(`name`),
   FOREIGN KEY (`experiment_id`) REFERENCES `competence-schema`.`experiments`(`id`),
   PRIMARY KEY (`id`));
+
+CREATE TABLE `competence-schema`.`fake_phones` (
+    `fake_phone_number` VARCHAR(15) NOT NULL,
+    `real_phone_number` VARCHAR(65) NOT NULL,
+    PRIMARY KEY (`fake_phone_number`));

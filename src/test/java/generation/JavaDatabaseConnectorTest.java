@@ -6,7 +6,6 @@ import model.POI;
 import model.POIType;
 import model.User;
 import model.UserGender;
-import model.UserType;
 import org.junit.Assert;
 import org.junit.Test;
 import repository.POIRepository;
@@ -42,10 +41,10 @@ public class JavaDatabaseConnectorTest {
     public void checkUserCrud() throws SQLException {
         //given:
         String query = "SELECT * FROM `competence-schema`.`persons`";
-        User stUser = new User(UUID.randomUUID(), "111222333",
-                21, UserType.student, UserGender.female, EXPERIMENT_ID);
-        User ndUser = new User(UUID.fromString("e734b220-dffb-4e86-9ed3-e384afef233a"), "111222456",
-                48, UserType.teacher, UserGender.helikopter_szturmowy, EXPERIMENT_ID);
+        UserRepository userRepository = new UserRepository();
+        UserFactory userFactory = UserFactory.getInstance();
+        User stUser = userFactory.generate();
+        User ndUser = userFactory.generate();
 
         //when:
         long numberOfUsersBefore = UserRepository.getTotalNumberOfUsers();
@@ -61,7 +60,7 @@ public class JavaDatabaseConnectorTest {
         List<User> users = UserRepository.getAll();
 
         boolean deleted = UserRepository.delete(stUser.getUserID());
-        boolean deleted2 = UserRepository.delete(UUID.fromString("e734b220-dffb-4e86-9ed3-e384afef233a"));
+        boolean deleted2 = UserRepository.delete(ndUser.getUserID());
 
         //then:
         Assert.assertTrue(stAdded);
