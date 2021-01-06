@@ -112,6 +112,7 @@ public class TraceDataRepositoryTest {
                 .pointOfInterestId(UUID.randomUUID())
                 .entryTime(LocalDateTime.now().minusDays(1))
                 .exitTime(LocalDateTime.now().minusDays(1))
+                .experimentId(UUID.randomUUID())
                 .build();
 
         TraceData traceToday = TraceData.builder()
@@ -120,6 +121,7 @@ public class TraceDataRepositoryTest {
                 .pointOfInterestId(UUID.randomUUID())
                 .entryTime(LocalDateTime.now())
                 .exitTime(LocalDateTime.now())
+                .experimentId(UUID.randomUUID())
                 .build();
 
         TraceData traceTomorrow = TraceData.builder()
@@ -128,6 +130,7 @@ public class TraceDataRepositoryTest {
                 .pointOfInterestId(UUID.randomUUID())
                 .entryTime(LocalDateTime.now().plusDays(1))
                 .exitTime(LocalDateTime.now().plusDays(1))
+                .experimentId(UUID.randomUUID())
                 .build();
 
         traceRepository.insertTraces(Arrays.asList(traceYesterday, traceToday, traceTomorrow));

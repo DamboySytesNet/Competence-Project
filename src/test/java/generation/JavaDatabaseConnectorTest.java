@@ -64,7 +64,7 @@ public class JavaDatabaseConnectorTest {
         List<User> users = UserRepository.getAll();
 
         boolean deleted = UserRepository.delete(stUser.getUserID());
-        boolean deleted2 = UserRepository.delete(UUID.fromString("e734b220-dffb-4e86-9ed3-e384afef233a"));
+        boolean deleted2 = UserRepository.delete(ndUser.getUserID());
 
         //then:
         Assert.assertTrue(stAdded);
